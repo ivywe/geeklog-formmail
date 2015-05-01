@@ -1,0 +1,327 @@
+静的ページPHPでフォームメールページを作成                         Version: 2.1.8
+                                                              Create: 2015/05/01
+                           Authors: Tetsuko Komma - komma AT ivywe DOT co DOT jp
+                             Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
+
+
+
+静的ページPHPで汎用フォームメール(お問合せ)を設置するものです。
+
+
++-----------------------------------------------------------------------------+
+| インストール
++-----------------------------------------------------------------------------+
+
+【インストール - 静的ページPHPをON】
+※静的ページPHPをONにしている方は、次の「静的ページ作成」からどうぞ。
+
+ 1. 管理者でログインし、コンフィギュレーション > 静的ページ > PHPを許可する => 「はい」 で保存する。
+
+ 2. 管理者ログインして管理者専用メニュー内「グループ」を開き、「Static Page Admin」の編集をクリックします。
+
+ 3. 権限の「staticpages.PHP」にチェックをつけて保存します。
+
+
+【インストール - 静的ページ作成】
+
+ 1. 管理者専用メニュー内「静的ページ」を開き、「新規作成」をクリックします。
+
+ 2. ヘルプ用ドキュメント(sp-helpformmail_sample.txt)を次の内容で作成します
+ タイトル「お問い合せドキュメント」
+ レイアウト「ヘッダ・フッタあり(ブロックなし)」
+ 投稿モード「HTML」
+ ID「helpformmail」
+ テキストエリアへの貼付けはsp-helpformmail_sample.txtのhtmlコメントのここからここまでの間をコピー＆ペーストしてください。
+
+ 3. お問い合わせフォーム(staticpages_formmail.php)を次の内容で作成します。
+ タイトル「お問い合せ」
+ レイアウト「ヘッダ・フッタあり・左ブロックあり(右ブロックなし)」
+ 投稿モード「HTML」
+ ID「formmail」
+ テキストエリアへの貼付けはstaticpages_formmail.phpをコピー＆ペーストしてください。
+ PHP「PHPを実行する」
+
+
+【インストール - CSS用画像アップロード】
+
+ 1. FTPソフトにて images を 公開領域の images へアップロードします。
+
+
+【インストール - CSS追加】
+
+※テーマにより追加するcssが違う場合があります。
+ professionalテーマ は public_html/layout/professional/style.css
+ professional_cssテーマ は public_html/layout/professional_css/custom.css
+ modern_curveテーマ は public_html/layout/modern_curve/css/custom.css
+ (※基本は使用テーマの最後に読み込まれるcssの末尾へ追加)
+
+※お使いのGeeklogが2.0以上の場合
+
+ add_to_gl20x_custom.css -> custom.css or style.css (末尾へ追加)
+
+
+※お使いのGeeklogが1.8の場合
+
+ add_to_gl18x_custom.css -> custom.css or style.css (末尾へ追加)
+
+
+【インストール - JavaScript追加 - Geeklog1.8のみ】
+
+※お使いのGeeklogが1.8の場合のみヘルプ表示用のJavaScriptをアップロードする必要があります。
+
+ add_to_gl18x_formmail.js --FTP Upload--> public_html/javascript/formmail.js
+
+
+【インストール - Geeklog2.1以下の場合は本体を少しハック】
+CSRF対策にユニークなIDとしてtokenを利用しますがGeeklogのライブラリのtoken周りにバグがあるため以下のハックを適用します。
+
+
+private/system/lib-security.php
+
+「function SEC_createToken」関数を探します。
+Geeklog1.8.1 : 1099行目付近
+Geeklog2.0.0 : 1316行目付近
+
+この関数の中の以下の部分を
+
+    /* Destroy tokens for this user/url combination */
+    $sql = "DELETE FROM {$_TABLES['tokens']} WHERE owner_id='{$uid}' AND urlfor='$pageURL'";
+    DB_query($sql);
+
+次のように変更します。
+
+    if ($uid != 1) {
+        /* Destroy tokens for this user/url combination */
+        $sql = "DELETE FROM {$_TABLES['tokens']} WHERE owner_id='{$uid}' AND urlfor='$pageURL'";
+        DB_query($sql);
+    }
+
+
+そして次に先ほどの関数の2つぐらい下にある関数「function SECINT_checkToken」を探します。
+Geeklog1.8.1 : 1207行目付近
+Geeklog2.0.0 : 1423行目付近
+
+
+この関数の中の以下の部分を
+
+            /* Check that:
+             *  token's user is the current user.
+             *  token is not expired.
+             *  the http referer is the url for which the token was created.
+             */
+            if( $_USER['uid'] != $tokendata['owner_id'] ) {
+                $return = false;
+
+
+次のように変更します。
+
+            /* Check that:
+             *  token's user is the current user.
+             *  token is not expired.
+             *  the http referer is the url for which the token was created.
+             */
+            $uid = isset($_USER['uid']) ? $_USER['uid'] : 1;
+            if( $uid != $tokendata['owner_id'] ) {
+                $return = false;
+
+この2点の修正でCSRF対策済みのお問い合わせが正常に動くようになります。
+このハックが正しく行えないとtokenエラーとなり確認画面に遷移できなかったり、メール完了まで進めなかったりします。
+
+
+【インストール - 確認】
+
+ 1. ブラウザで以下のURLにアクセスして完了です。
+「http://あなたのサイト/staticpages/index.php?page=formmail」
+ ※CSSや画像がキャッシュが利用され更新された内容でない場合がありますので、
+ ※ブラウザの再表示を押してみてください。
+
+
+
+
+
++-----------------------------------------------------------------------------+
+| 各種入力制限
++-----------------------------------------------------------------------------+
+
+【入力文字数の制限をするには】
+maxlengthを項目設定の中に追加します。
+(入力エラーチェックの valid_maxlen も一緒に利用することをお勧めします)
+
+例）====================================
+    array('type' => 'text',
+          'name' => 'q_name_1',
+          'size' => '40',
+          'maxlength' => '40',    <--ここ
+          'class' => 'bginput ime_on',
+          'value' => $username
+    ),
+========================================
+
+
+
+【文字入力のモード(IME)を半角、全角を自動で適切に変更するには】
+class指定の中に"ime_on"を指定すると全角モードになり、"ime_off"を指定すると半角モードになります。
+※CSSを利用していますのでサンプルCSSから該当部分をお使いのテーマCSSに適用してください。
+
+例）====================================
+    array('type' => 'text',
+          'name' => 'q_name_1',
+          'size' => '40',
+          'maxlength' => '40',
+          'class' => 'bginput ime_on',  <--ここのime_onで全角モードになる
+          'value' => $username
+    ),
+========================================
+
+
+
+【入力チェック項目一覧】
+valid_require => '必須用文字列'  : 必須チェック
+valid_equal => $essential_email  : 別の項目と同じかチェック => "メール一致チェック項目指定"
+valid_email => $propriety_email  : メールかチェック => "メールアドレスチェック項目指定"
+valid_notzero => '項目名指定'    : 指定項目が足して0以外かチェック（宿泊大人&子供の人数などで利用）
+valid_numeric => '項目名指定'    : 半角の数値のみかチェック
+valid_phone   => '項目名指定'    : 半角の数値,+(半角プラス),-(半角マイナス),半角スペースのみかチェック
+valid_hankaku => '項目名指定'    : 半角かチェック（全部半角かどうか）
+valid_zenkaku => '項目名指定'    : 全角かチェック（全部全角かどうか）
+valid_eisuhan => '項目名指定'    : 半角英数字かチェック（全角がなく、半角英数字、記号も不可）
+valid_kanazen => '項目名指定'    : 全角カタカナかチェック（全部全角カタカナ、記号も不可）
+valid_hirazen => '項目名指定'    : 全角ひらがなかチェック（全部全角ひらがなか、記号も不可）
+valid_notkanahan => '項目名指定' : 半角カタカナ以外かチェック
+valid_maxlen  => '項目名=文字数' : 指定文字数以下かチェック
+valid_minlen  => '項目名=文字数' : 指定文字数以上かチェック
+※項目名指定は,(カンマ)区切りで複数指定できます
+
+
+
+【TEXTAREAの入力文字数の制限】
+２つの対策により効果的に実現！
+
+その１）JavaScriptにより(Twitterのように)のこり文字数を表示して入力しているユーザに視覚的にうったえかけることで送信(POST)前でも文字数がわかる。
+
+========================================
+            array('type' => 'textarea',
+                  'name' => 'q_other',
+                  'class' => 'bginput ime_on',
+                  'style' => 'width: 95%; height: 100px;',
+                  'onKeyup' => "var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';"  <--ここで残り入力可能文字数を表示。200が最大文字数。tasp1が表示するSPANのid。
+            ),
+            array('input' => '<br'.XHTML.">※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong><br".XHTML.'>'),  <--ここのSPANタグ内へ表示。複数のtextareで行う場合はidを適切に変えること。
+========================================
+
+
+その２）送信(POST)された入力内容をチェックして文字数を超えていたらエラーを表示。
+
+========================================
+    array('header' => 'お問い合わせ内容',
+          'valid_notkanahan' => 'q_other',
+          'error_notkanahan' => 'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
+          'valid_len' => 'q_other=200',
+          'error_len' => 'お問い合わせ内容の文字数は200文字以内で入力してください',
+          'data' =>
+========================================
+
+
+
+
+
++-----------------------------------------------------------------------------+
+| 日付項目でのカレンダー表示
++-----------------------------------------------------------------------------+
+
+【日付入力でカレンダーを表示して選択】
+JavaScript + CSS にてカレンダーを表示して日付を選択できるようにします。
+
+その１）デフォルト設定
+
+カレンダー表示用のJavaScriptを以下のように設定します。
+
+以下の宣言の中にq_date1という部分があり、これは「その２）利用例」のnameと一致しています。変更する場合は両方を変更してください。
+========================================
+# カレンダー表示 jqueryui datepicker http://jqueryui.com/datepicker/
+#   ※使わない場合はJSLIB;までコメントアウトしてください。
+$jslib_datepicker = <<<JSLIB
+$(function() { $.datepicker.setDefaults( $.datepicker.regional['ja'] ); $("#q_date1").datepicker({ dateFormat: '$date_js_cal', dayNamesMin: ['日','月','火','水','木','金','土'], monthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], showMonthAfterYear: true }); });
+JSLIB;
+========================================
+
+
+その２）利用例
+カレンダーを利用するようidのq_date1という部分は「その１）デフォルト設定」の「JavaScriptライブラリ等の宣言」の中にあるq_date1と一致しています。変更する場合は両方を変更してください。
+========================================
+//<tr>１行
+array('header'=>'希望日',
+  'data'=>array(
+array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
+  ),
+),
+//</tr>１行
+========================================
+
+
+
+
+
+【更新履歴】
+2014/01/27  2.1.8
+ * CSRF対策でtokenを利用するよう修正(default有効時間1800秒)
+ * CSRF対策でRefererをチェックし自サイト以外をブロック(設定で無効にもできる)
+2012/11/03  2.1.6
+ * 使うJavaScriptをバージョンで判定する部分の不具合を修正
+ * ログイン判定をCOM_isAnonUser()を使うよう修正
+2012/10/26  2.1.5
+ * Geeklog1.8以上用にカスタマイズ
+ * インデントなど整形し見通しの良さと空白スペースなど全文字容量を減らす
+ * tooltipによるヘルプ表示に対応
+ * CAPTCHAに非対応
+ * 日付入力のカレンダー表示をjqueryuiのdatepickerを利用するよう変更
+ * tableの項目名部分の幅を指定できるよう対応
+2010/08/23  2.1.4
+ * FORMのACTIONにXSS対策を行う
+2010/07/14  2.1.3
+ * メディアギャラリ1.6.10WKZで日付のカレンダー表示ができるよう調整
+ * cssを整理
+ * imageの色を変更
+ * 入力チェックに電話番号チェックを追加
+ * 英語版の作成 (thanks kobab, ivy)
+ * FORMデフォルトのサンプルのnameを英語版と共通で使えるように変更
+ * 項目設定のinputタグのtypeでhidden、reset、password、buttonに対応
+ * 日付入力カレンダー用に追加対象が add_to_calendar では分かりにくいため add_to_javascript に変更
+2010/05/28  2.1.2
+ * メディアギャラリ使用時に日付のカレンダーが表示されない不具合を修正
+2010/05/27  2.1.1
+ * 日付入力にカレンダー表示を利用できる機能追加
+ * 数値チェックのバグを修正
+ * 文字数チェックに最小チェックも追加
+2010/05/07  2.1.0  (Presented by:IvyWe)
+ * 日本語入力(IME)の全角と半角のモードを切り替える機能追加
+ * 入力文字数制限のサンプルをデフォルトフォームに採用
+ * 入力チェックに数値のみ、半角、全角、半角英数字、全角カタカナ、全角ひらがな、半角カタカナ以外、最大文字数の８つのチェックを追加
+ * XSS(クロスサイトスクリプティング)対策を行う
+ * textareaに(Twitterのように)あと何文字入力できるか表示するサンプルを追加
+2010/04/19 2.0.8
+ * CAPTCHA利用時にサンプルCSSで見た目が崩れるのを修正
+2010/04/12 2.0.7
+ * ログインユーザ名セットでfullnameがあればこちらをセット
+ * 末尾のechoのコメントアウトをはずしGeeklog1.6系の「PHPを実行」にあわせる
+ * ログインユーザに画像認証が表示されない場合、項目名もでないよう対応
+   上記は下記URLのトピック #1,#2 を参考
+   http://sns.geeklog.jp/?m=pc&a=page_c_topic_detail&target_c_commu_topic_id=886
+2010/03/22 2.0.6
+ * ログインしてたらユーザ名とメールアドレスを利用できるように追加
+   http://www.geeklog.jp/forum/viewtopic.php?showtopic=14819
+2009/10/11 2.0.5
+ * $_CP_CONFを$_CP_CONFIGとtypeミスを以下の指定より修正
+   http://www.geeklog.jp/forum/viewtopic.php?showtopic=13907&lastpost=true#13938
+2009/03/28 2.0.4
+ * metatagプラグインが入ってる場合の不具合に対応
+2009/03/26 2.0.3
+ * 携帯で初回表示にエラーチェックしてしまうのを修正(携帯ハックがPOSTを作成してる)
+2009/03/06 2.0.2
+ * CSVデータに出力しない機能を追加 ('not_csv')
+ * CSVのカラムがチェックボックスON/OFFでずれていたのを修正
+2009/02/23 2.0.1
+ * 確認用の入力など確認画面に反映しない機能を追加 ('not_confirm')
+2009/02/12 2.0.0
+ * 画像認証に対応
+
