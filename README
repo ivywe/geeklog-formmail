@@ -1,4 +1,4 @@
-静的ページPHPでフォームメールページを作成                         Version: 2.1.8
+静的ページPHPでフォームメールページを作成                        Version: 2.1.8a
                                                               Create: 2015/05/01
                            Authors: Tetsuko Komma - komma AT ivywe DOT co DOT jp
                              Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
@@ -263,6 +263,8 @@ array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlen
 
 
 【更新履歴】
+2015/05/01  2.1.8a
+ * Page IDをグローバル変数でセットするよう修正
 2014/01/27  2.1.8
  * CSRF対策でtokenを利用するよう修正(default有効時間1800秒)
  * CSRF対策でRefererをチェックし自サイト以外をブロック(設定で無効にもできる)

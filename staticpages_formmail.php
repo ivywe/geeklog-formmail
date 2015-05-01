@@ -1,12 +1,31 @@
 // +---------------------------------------------------------------------------+
-// | FormMail Static Page for Geeklog 1.8 higher
+// | FormMail Static Page for Geeklog 1.8 higher                               |
 // +---------------------------------------------------------------------------+
-// | Copyright (C) 2008-2014 by the following authors:
-// | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// | Sponser    : White Bear Family CO., LTD
-// | Coordinate : Adeliae Planning CO., LTD - www.e-adeliae.com
-// | Coordinate : IVY WE CO., LTD - www.ivywe.co.jp
-// | Version: 2.1.8
+// | staticpages_formmail.php                                                  |
+// |                                                                           |
+// | FormMail Static Page for                                                  |
+// +---------------------------------------------------------------------------+
+// | Copyright (C) 2000-2011 by the following authors:                         |
+// |                                                                           |
+// | Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp                       |
+// |          Tetsuko Komma - komma AT ivywe DOT co DOT jp                     |
+// | Version: 2.1.8a                                                           |
+// +---------------------------------------------------------------------------+
+// |                                                                           |
+// | This program is free software; you can redistribute it and/or             |
+// | modify it under the terms of the GNU General Public License               |
+// | as published by the Free Software Foundation; either version 2            |
+// | of the License, or (at your option) any later version.                    |
+// |                                                                           |
+// | This program is distributed in the hope that it will be useful,           |
+// | but WITHOUT ANY WARRANTY; without even the implied warranty of            |
+// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             |
+// | GNU General Public License for more details.                              |
+// |                                                                           |
+// | You should have received a copy of the GNU General Public License         |
+// | along with this program; if not, write to the Free Software Foundation,   |
+// | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           |
+// |                                                                           |
 // +---------------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS; // Geeklog変数
 global $_fmhelppageurl,$_fmtblcolwidth,$_fmtokenttl; // FormMail変数
@@ -15,7 +34,10 @@ if (!defined('XHTML')) define('XHTML', ' /');
 // --[[ 初期設定 ]]------------------------------------------------------------
 //  静的ページPHPを作成する時に入力したIDを入れてください。
 //  (wikiドキュメントのサンプル例だと'formmail')
-$pageid = 'formmail';
+
+global $page;
+$pageid = $page;
+
 # ヘルプドキュメント用静的ページID
 #    ※ヘルプ無しにするなら空文字にする
 $helppageid = 'helpformmail';
