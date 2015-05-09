@@ -1,6 +1,5 @@
-静的ページPHPでフォームメールページを作成                        Version: 2.1.8a
-                                                              Create: 2015/05/01
-                           Authors: Tetsuko Komma - komma AT ivywe DOT co DOT jp
+静的ページPHPでフォームメールページを作成                         Version: 2.1.9
+                                                              Create: 2015/05/04
                              Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
 
 
@@ -136,8 +135,50 @@ Geeklog2.0.0 : 1423行目付近
  ※ブラウザの再表示を押してみてください。
 
 
++-----------------------------------------------------------------------------+
+| 画像認証(CAPTCHA)の利用
++-----------------------------------------------------------------------------+
+
+ 1. 管理者でログインし、コンフィギュレーション > Captcha > メール送信をサポートする => 「はい」 で保存する。
+
+※ CAPTCHAのテンプレートは以下を利用しています。
+ private/plugins/captcha/templates/captcha_contact.thtml
+
+ 2．画像認証のフォーム設定
+
+以前までのバージョンで以下のようになっているコメント部分の</table>と<submit>の間に画像認証用の設定を挿入します。
+<code>
+),),
+##</table>
+##<submit>入力画面
+array('action'=>'input',
+</code>
+
+<code>
+),),
+##</table>
+##<table>画像認証
+array('title_captcha' => '画像認証', 'table_captcha' => array(
+//<tr>１行画像認証
+array('header_captcha' => '画像認証',
+  'valid_captcha' => $required_string,
+  'error_captcha' => $msg_spformmail_valid_captcha,
+  'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
+  'data' => array()
+),
+//</tr>１行画像認証
+),),
+##</table>画像認証
+##<submit>入力画面
+array('action'=>'input',
+</code>
 
 
+※重要※※重要※※重要※※重要※※重要※
+注意）Geeklog1.8日本語拡張版に同梱のCAPTCHA4.0.2には非対応です。
+      Geeklog2.1日本語拡張版に同梱のCAPTCHA3.5.5に対応するよう作られています。
+      ※CAPTCHAのバージョン番号の管理が製作者の違いでおかしくなっており混乱する状況となっておりますのでご注意ください。
+※重要※※重要※※重要※※重要※※重要※
 
 +-----------------------------------------------------------------------------+
 | 各種入力制限
@@ -190,6 +231,7 @@ valid_hirazen => '項目名指定'    : 全角ひらがなかチェック（全�
 valid_notkanahan => '項目名指定' : 半角カタカナ以外かチェック
 valid_maxlen  => '項目名=文字数' : 指定文字数以下かチェック
 valid_minlen  => '項目名=文字数' : 指定文字数以上かチェック
+valid_captcha => '必須用文字列'  : CAPTCHA専用チェック
 ※項目名指定は,(カンマ)区切りで複数指定できます
 
 
@@ -263,8 +305,9 @@ array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlen
 
 
 【更新履歴】
-2015/05/01  2.1.8a
- * Page IDをグローバル変数でセットするよう修正
+2015/05/04  2.1.9
+ * pageidを自動的に取得
+ * CAPTCHAに対応
 2014/01/27  2.1.8
  * CSRF対策でtokenを利用するよう修正(default有効時間1800秒)
  * CSRF対策でRefererをチェックし自サイト以外をブロック(設定で無効にもできる)

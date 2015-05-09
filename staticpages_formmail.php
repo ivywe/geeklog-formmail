@@ -1,43 +1,18 @@
 // +---------------------------------------------------------------------------+
-// | FormMail Static Page for Geeklog 1.8 higher                               |
+// | FormMail Static Page for Geeklog 1.8 higher
 // +---------------------------------------------------------------------------+
-// | staticpages_formmail.php                                                  |
-// |                                                                           |
-// | FormMail Static Page for                                                  |
+// | Copyright (C) 2008-2015 by the following authors:
+// | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
+// | Sponser    : White Bear Family CO., LTD
+// | Coordinate : Adeliae Planning CO., LTD - www.e-adeliae.com
+// | Coordinate : IVY WE CO., LTD - www.ivywe.co.jp
+// | Version: 2.1.9
 // +---------------------------------------------------------------------------+
-// | Copyright (C) 2000-2011 by the following authors:                         |
-// |                                                                           |
-// | Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp                       |
-// |          Tetsuko Komma - komma AT ivywe DOT co DOT jp                     |
-// | Version: 2.1.8a                                                           |
-// +---------------------------------------------------------------------------+
-// |                                                                           |
-// | This program is free software; you can redistribute it and/or             |
-// | modify it under the terms of the GNU General Public License               |
-// | as published by the Free Software Foundation; either version 2            |
-// | of the License, or (at your option) any later version.                    |
-// |                                                                           |
-// | This program is distributed in the hope that it will be useful,           |
-// | but WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             |
-// | GNU General Public License for more details.                              |
-// |                                                                           |
-// | You should have received a copy of the GNU General Public License         |
-// | along with this program; if not, write to the Free Software Foundation,   |
-// | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           |
-// |                                                                           |
-// +---------------------------------------------------------------------------+
-global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS; // Geeklog変数
+global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
 global $_fmhelppageurl,$_fmtblcolwidth,$_fmtokenttl; // FormMail変数
 if (!defined('XHTML')) define('XHTML', ' /');
 
 // --[[ 初期設定 ]]------------------------------------------------------------
-//  静的ページPHPを作成する時に入力したIDを入れてください。
-//  (wikiドキュメントのサンプル例だと'formmail')
-
-global $page;
-$pageid = $page;
-
 # ヘルプドキュメント用静的ページID
 #    ※ヘルプ無しにするなら空文字にする
 $helppageid = 'helpformmail';
@@ -135,6 +110,18 @@ $seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認'
 
 # 必須入力の文字列
 $required_string = '<span class="spf_required">*必須</span>';
+
+# ==画像認証関係==
+#   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
+$msg_spformmail_notinstall_captcha = 'CAPTCHAプラグインがインストールされていません。';
+#   送信時に画像認証でエラーの場合のエラーメッセージ
+#     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
+#     ※空文字意外にするとそれを無視して固定メッセージにできます。
+$msg_spformmail_valid_captcha = '';
+#
+#   ※ CAPTCHAのテンプレート
+#   private/plugins/captcha/templates/captcha_contact.thtml
+#
 
 # ==日付関係==
 #   下記JavaScriptカレンダーでの日付表記 http://jqueryui.com/datepicker/#date-formats
@@ -294,12 +281,24 @@ array('header'=>'お問い合わせ内容',
   'help'=>'q_other',
   'data'=>array(
 array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'bginput ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
-array( 'input'=>'<br'.XHTML.">※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span><strong><br".XHTML.'>' ),
+array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span><strong>".'<br'.XHTML.'>' ),
   ),
 ),
 //</tr>１行
 ),),
 ##</table>
+##<table>画像認証
+array('title_captcha' => '画像認証', 'table_captcha' => array(
+//<tr>１行画像認証
+array('header_captcha' => '画像認証',
+  'valid_captcha' => $required_string,
+  'error_captcha' => $msg_spformmail_valid_captcha,
+  'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
+  'data' => array()
+),
+//</tr>１行画像認証
+),),
+##</table>画像認証
 ##<submit>入力画面
 array('action'=>'input',
   'data'=>array(
@@ -323,29 +322,6 @@ array( 'string'=>'</div>' ),
 );
 
 
-
-// --[[ 初期処理 ]]------------------------------------------------------------
-# POSTデータを直接変換 (全角から半角へ、カタカナ半角からカタカナ全角へ)
-if (!empty($zentohan_itemname)) { foreach (explode(',',$zentohan_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'askh'); } }
-if (!empty($kana_hantozen_itemname)) { foreach (explode(',',$kana_hantozen_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'K'); } }
-if (!empty($kana_hiratokana_itemname)) { foreach (explode(',',$kana_hiratokana_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'C'); } }
-# データを保存用に加工
-foreach ($_POST as $k => $v) {
-    $fld_list[$k] = preg_replace('/,/', '，', $_POST[$k]);
-    $fld_list[$k] = preg_replace('/"/', '”', $fld_list[$k]);
-    $fld_list[$k] = preg_replace("/'/", "’", $fld_list[$k]);
-    $fld_list[$k] = preg_replace('/`/', '‘', $fld_list[$k]);
-    $fld_list[$k] = preg_replace('/;/', '；', $fld_list[$k]);
-    $fld_list[$k] = preg_replace(preg_quote('#'.chr(92).'#'), '￥', $fld_list[$k]);
-    $fld_list[$k] = COM_applyFilter($fld_list[$k]);
-}
-# CSVファイルのフルパス
-$save_csv_file = $save_csv_path . $save_csv_name;
-# idからurlを作成
-if (!empty($pageid)) { $pageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$pageid); }
-if (empty($_fmhelppageurl) && !empty($helppageid)) { $_fmhelppageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$helppageid); }
-# CSRF
-if (!empty($_POST) && !SECINT_checkToken()) { $m=isset($_POST[$email_input_name]) ? 'email='.$_POST[$email_input_name].' ' : ''; COM_accessLog("tried {$m}to staticpage({$pageid}) failed CSRF checks."); header('Location: '.$pageurl); exit; }
 
 // --[[ 関数群 ]]---------------------------------------------------------------
 if(!function_exists('_fmGetAction')){
@@ -375,6 +351,25 @@ function _fmPutiFilter($s) {
     $se = array('%','(',')',chr(92),chr(13).chr(10),chr(13),chr(10));
     $re = array('&#37;','&#40;','&#41;','&#92;','','','');
     return str_replace($se, $re, htmlspecialchars($s,ENT_QUOTES));
+}
+
+function _fmChkUseCAPTCHA_HTML () {
+    global $_CP_CONF, $_USER;
+    if ( ($_CP_CONF['anonymous_only'] && $_USER['uid'] < 2) || $_CP_CONF['anonymous_only'] == 0 || ($_CP_CONF['remoteusers'] == 1 && SEC_inGroup("Remote Users") ) ) {
+        return true;
+    }
+    return false;
+}
+function _fmVldCAPTCHA ($type, $errmsg) {
+    $msg = '';
+    if (!function_exists('CAPTCHA_sid')) { return $msg; }
+    if ( _fmChkUseCAPTCHA_HTML() ) {
+        $str = COM_applyFilter($_POST['captcha']);
+        list( $rc, $msg )  = CAPTCHA_checkInput( $type, $str );
+    }
+    if ( !empty($msg) && !empty($errmsg) ) { $msg = $errmsg; }
+    return $msg;
+
 }
 
 function _fmVld_isPhone($s) { return (preg_match('/^(?:[0-9'.chr(92).'+'.chr(92).'-'.chr(92).'s])+$/D',$s)) ? TRUE : FALSE; }
@@ -503,12 +498,14 @@ switch ($mode) {
 //</入力チェック>
         }
     }
+    // 画像認証チェック
+    if ( $mode == 'captcha' ) { $msg = _fmVldCAPTCHA('contact', $errmsg); }
     return $msg;
 }
 
 function _fmValidateLines ($lines) {
     $errmsg;
-    foreach (array('require','equal','email','notzero','numeric','phone','hankaku','zenkaku','eisuhan','kanazen','hirazen','notkanahan','maxlen','minlen') as $chk) {
+    foreach (array('require','equal','email','notzero','numeric','phone','hankaku','zenkaku','eisuhan','kanazen','hirazen','notkanahan','captcha','maxlen','minlen') as $chk) {
         // 必須,一致,メール,画像認証,エラー のチェック
         if (isset($lines['valid_'.$chk])) {
             $errmsg = _fmChkValidate($chk, $lines['data'], $lines['error_'.$chk], $lines['valid_'.$chk]);
@@ -527,8 +524,9 @@ function _fmValidateItems ($items) {
         // 各テーブル
         foreach ($item as $key => $value) {
             // １テーブル
-            if ($key == 'table') {
+            if ($key == 'table' || $key == 'table_captcha') {
                 $action = _fmGetAction('');
+                if ($key == 'table_captcha' && $action == 'finish') { continue; }
                 foreach ($value as $key2 => $value2) {
                     // テーブル１行
                     $errmsg = _fmValidateLines($value2);
@@ -690,16 +688,44 @@ function _fmMkTable_Data ($datas, $action) {
     return $buf;
 }
 
+function _fmMkCAPTCHA_HTML($name, $msg_notcaptcha) {
+    global $_CP_CONF, $_USER, $_TABLES;
+    $captcha = '';
+    if (!function_exists('CAPTCHA_sid')) { return $msg_notcaptcha; }
+    if ( _fmChkUseCAPTCHA_HTML() ) {
+        $csid = 0;
+        // housekeeping, delete old captcha sessions
+        $oldSessions = time() - ($_CP_CONF['expire']+900);
+        DB_query("DELETE FROM {$_TABLES['cp_sessions']} WHERE cptime < " . $oldSessions,1);
+        // OK, we need to insert the CAPTCHA, so now we need to setup the session_id:
+        // check to see if a failed entry happened...
+        if ( isset($_POST['csid']) ) {
+            $csid = COM_applyFilter($_POST['csid']);
+        } else {
+            $csid = CAPTCHA_sid();
+        }
+        $time    = time();
+        $counter = 0;
+        $validation = '';  // this will be filled in by the CAPTCHA
+        DB_save($_TABLES['cp_sessions'],"session_id,cptime,validation,counter","'$csid','$time','','0'");
+        $captcha = CAPTCHA_getHTML($csid,$name);
+    }
+    return $captcha;
+}
+
 function _fmMkTable ($tables, $action) {
     global $_fmhelppageurl;
     $buf = '';
     foreach ($tables as $lines) {
+        $flg_valid_captcha=false;
         $errflg = '';
         $tdclass='';
         $buf .= LB .'            <tr>' . LB;
         $buf .= '                <th>';
         if (isset($lines['header'])) { $buf .= $lines['header']; }
+        if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
         if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
+        if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
         if (isset($lines['help']) && !empty($_fmhelppageurl) && $action == 'input') { $buf .= ' (<a href="javascript:void(0);" id="'.$lines['help'].'" class="tooltip">?</a>)'; }
         // エラーチェック
         if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
@@ -707,7 +733,11 @@ function _fmMkTable ($tables, $action) {
         $buf .= '</th>'.LB;
         $buf .= '                <td'.$tdclass.'>';
         if (isset($lines['data'])) {
-            $buf .= _fmMkTable_Data($lines['data'], $action);
+            if ($flg_valid_captcha) {
+                $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
+            } else {
+                $buf .= _fmMkTable_Data($lines['data'], $action);
+            }
         }
         $buf .= '</td>'.LB;
         $buf .= '            </tr>'.LB;
@@ -734,7 +764,22 @@ function _fmMkForm ($items, $action) {
         </tbody>
     </table>
 END;
-        } elseif (!empty($item['action'])) {         // 送信ボタン
+        } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
+            if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
+                foreach ($item as $key => $value) {
+                    // １テーブル
+                    switch ($key) {
+                        case 'title_captcha': $buf .= _fmMkTitle($value); break;
+                        case 'table_captcha': $buf .= _fmMkTable($value, $action); break;
+                    }
+                }
+                $buf .= <<<END
+
+        </tbody>
+    </table>
+END;
+            }
+        } elseif (!empty($item['action'])) {         //送信ボタン
             if ($item['action'] == $action) {
                 $buf .= LB . '    <input type="hidden" name="action" value="' . $action . '"' . XHTML . '>';
                 $buf .= LB . _fmMkTable_Data($item['data'], $action);
@@ -778,6 +823,32 @@ function _fmChkReferer ($pu,$err) {
     return $msg;
 }
 }
+
+
+
+// --[[ 初期処理 ]]------------------------------------------------------------
+# POSTデータを直接変換 (全角から半角へ、カタカナ半角からカタカナ全角へ)
+if (!empty($zentohan_itemname)) { foreach (explode(',',$zentohan_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'askh'); } }
+if (!empty($kana_hantozen_itemname)) { foreach (explode(',',$kana_hantozen_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'K'); } }
+if (!empty($kana_hiratokana_itemname)) { foreach (explode(',',$kana_hiratokana_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'C'); } }
+# データを保存用に加工
+foreach ($_POST as $k => $v) {
+    $fld_list[$k] = preg_replace('/,/', '，', $_POST[$k]);
+    $fld_list[$k] = preg_replace('/"/', '”', $fld_list[$k]);
+    $fld_list[$k] = preg_replace("/'/", "’", $fld_list[$k]);
+    $fld_list[$k] = preg_replace('/`/', '‘', $fld_list[$k]);
+    $fld_list[$k] = preg_replace('/;/', '；', $fld_list[$k]);
+    $fld_list[$k] = preg_replace(preg_quote('#'.chr(92).'#'), '￥', $fld_list[$k]);
+    $fld_list[$k] = COM_applyFilter($fld_list[$k]);
+}
+# CSVファイルのフルパス
+$save_csv_file = $save_csv_path . $save_csv_name;
+# idからurlを作成
+if (!empty($page)) { $pageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$page); }
+if (empty($_fmhelppageurl) && !empty($helppageid)) { $_fmhelppageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$helppageid); }
+# CSRF
+if (!empty($_POST) && !SECINT_checkToken()) { $m=isset($_POST[$email_input_name]) ? 'email='.$_POST[$email_input_name].' ' : ''; COM_accessLog("tried {$m}to staticpage({$pageid}) failed CSRF checks."); header('Location: '.$pageurl); exit; }
+
 
 // Refererチェック
 if (!empty($_spreferercheck) && $_spreferercheck = 1) {

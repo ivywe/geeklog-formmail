@@ -1,9 +1,9 @@
 @media only screen and (max-width:420px){
-    tbody tr{
+    thead tr,tbody tr{
         display: block;
         margin-bottom: 1.5em;
     }
-    tbody th,
+    thead th,
     tbody td{
         display: list-item;
         border: none;
