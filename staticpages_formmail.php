@@ -88,7 +88,7 @@ $save_csv_name = 'formmail.csv';
 #   OFFにして別途フリーの文字変換ツールなどをご利用ください）
 # 注意) mb_convert_encodingで使える文字コードを指定してください
 #   例) UTF-8, SJIS, EUC-JP, JIS, ASCII
-$save_csv_lang = 'SJIS';
+$save_csv_lang = 'UTF-8';
 
 # 全角を半角に変換する項目名(英数字、スペース、カタカナ、ひらがな)
 #   入力された値を自動で変換する項目を指定
