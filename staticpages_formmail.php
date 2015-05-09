@@ -6,7 +6,7 @@
 // | Sponser    : White Bear Family CO., LTD
 // | Coordinate : Adeliae Planning CO., LTD - www.e-adeliae.com
 // | Coordinate : IVY WE CO., LTD - www.ivywe.co.jp
-// | Version: 2.1.9
+// | Version: 2.1.9UIkit
 // +---------------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
 global $_fmtokenttl; // FormMail変数
@@ -124,11 +124,6 @@ $date_mail = 'Y年m月d日H:i';
 #     phpのdateのものがすべて使えます http://www.php.net/manual/en/function.date.php
 $date_csv = 'Y/m/d H:i';
 
-# カレンダー表示 jqueryui datepicker http://jqueryui.com/datepicker/
-#   ※使わない場合はJSLIB;までコメントアウトしてください。
-$jslib_datepicker = <<<JSLIB
-$(function() { $.datepicker.setDefaults( $.datepicker.regional['ja'] ); $("#q_date1").datepicker({ dateFormat: '$date_js_cal', dayNamesMin: ['日','月','火','水','木','金','土'], monthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], showMonthAfterYear: true }); });
-JSLIB;
 
 #####
 # 表示メッセージ
@@ -160,7 +155,7 @@ array('title'=>'お客様情報', 'table'=>array(
 array('header'=>'法人様名',
   'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'bginput ime_on' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'ime_on' ),
 array( 'input'=>'<br'.XHTML.'>' ),
   ),
 ),
@@ -171,7 +166,7 @@ array('header'=>'お名前（漢字）',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'bginput ime_on', 'value'=>$username ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on', 'value'=>$username ),
 array( 'input'=>'&nbsp;※全角' ),
   ),
 ),
@@ -182,7 +177,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前(カタカナ)を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'bginput ime_on' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on' ),
 array( 'input'=>'&nbsp;※全角' ),
   ),
 ),
@@ -195,9 +190,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'bginput ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'bginput ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※確認のため、もう一度入力してください' ),
   ),
@@ -223,7 +218,7 @@ array('header'=>'電話番号',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'help'=>'半角数字と+(プラス)と-(ハイフン)と半角スペースで電話番号を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'bginput ime_off' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'ime_off' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
@@ -238,15 +233,14 @@ array( 'input'=>'携帯' ),
 // 1行 {
 array('header'=>'希望日',
   'data'=>array(
-// array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}"), 
-array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
+array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}"), 
   ),
 ),
 // }1行
 // 1行 {
 array('header' => '時間帯',
   'data'=>array(
-array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'class'=>'bginput', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降') ),
+array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'class'=>'', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降') ),
 array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望する時間帯。' ),
   ),
 ),
@@ -272,7 +266,7 @@ array('header'=>'お問い合わせ内容',
   'valid_maxlen'=>'q_other=200', 'error_maxlen'=>'お問い合わせ内容の文字数は200文字以内で入力してください',
   'help'=>'全角200文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'bginput ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
 array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
@@ -540,10 +534,13 @@ function _fmValidate ($items) {
         }
         $buf = <<<END
 
-<p class="uk-text-danger">入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
+<div class="uk-alert uk-alert-danger">
+<p>入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
 <ol class="uk-text-danger">
 $errmsg
 </ol>
+</div>
+
 END;
     }
     return $buf;
@@ -709,18 +706,18 @@ function _fmMkTable ($tables, $action) {
         $flg_valid_captcha=false;
         $errflg = '';
         $tdclass='';
+        // エラーチェック
+        if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
+        if ($errflg) { $tdclass=' uk-text-danger'; } else { $tdclass=''; }
         $buf .= LB .'            ' . LB;
-        $buf .= '<dt class="uk-margin-top">';
+        $buf .= '<dt class="uk-margin-top'.$tdclass.'">';
         if (isset($lines['header'])) { $buf .= $lines['header']; }
         if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
         if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
         if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
         if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
-        // エラーチェック
-        if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
-        if ($errflg) { $tdclass=' class="uk-margin-top uk-block-primary"'; } else { $tdclass=' class="uk-margin-top"'; }
         $buf .= '</dt>'.LB;
-        $buf .= '                <dd'.$tdclass.'>';
+        $buf .= '                <dd class="uk-margin-top">';
         if (isset($lines['data'])) {
             if ($flg_valid_captcha) {
                 $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
@@ -855,16 +852,6 @@ if ($action == 'input' || $action == 'confirm') {
 * フォーム画面HTML { ここから
 */
 
-// JS
-    if ($action == 'input') {
-        # JS datepicker
-        if (!empty($jslib_datepicker) && isset($_SCRIPTS)) {
-            $_SCRIPTS->setJavaScriptLibrary('jquery.ui.datepicker');
-            $_SCRIPTS->setJavascript($jslib_datepicker,true);
-        }
-	}
-
-
     // 遷移
     $seni = _fmMkSeni($seni_items, $action);
     // 入力フォーム
@@ -902,10 +889,10 @@ END;
     
     $out_html = <<<END
 
-<div id="form_step">
+<div>
 $seni
 </div>
-<div id="contact_thanks">
+<div>
 <p><strong>お問い合わせを受け付けました。</strong></p>
 <p>※お問い合わせ確認のメールを自動送信しました。<br />
 メールが届かない場合は、ご登録のメールアドレスが間違っている可能性があります。<br />
@@ -932,6 +919,7 @@ END;
 ご連絡方法: {$fld_list['q_answer_means']}
 TEL: {$fld_list['q_phone']}
 連絡先: {$fld_list['q_phone_kind']}
+希望日: {$fld_list['q_date1']}
 連絡ご希望時間帯: {$fld_list['q_access_time']}
 お申し込み内容: {$fld_list['q_order_1']} {$fld_list['q_order_2']} {$fld_list['q_order_3']}
 お問い合わせ内容: {$fld_list['q_other']}
