@@ -165,7 +165,7 @@ $lang = array(
 $form_items = array(
 ##<table>
 array('title'=>'お客様情報', 'table'=>array(
-//<tr>１行
+// 1行 {
 array('header'=>'法人様名',
   'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
   'data'=>array(
@@ -173,8 +173,8 @@ array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60'
 array( 'input'=>'<br'.XHTML.'>' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'お名前（漢字）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
@@ -184,8 +184,8 @@ array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class
 array( 'input'=>'&nbsp;※全角' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'お名前（カタカナ）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（カタカナ）が入力されていません',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
@@ -195,8 +195,8 @@ array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class
 array( 'input'=>'&nbsp;※全角' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'メールアドレス',
   'valid_require'=>$required_string, 'error_require'=>'メールアドレスが入力されていません',
   'valid_equal'=>$essential_email, 'error_equal'=>'メールアドレスが一致しません',
@@ -211,8 +211,8 @@ array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※確認のため、もう一度入力してください' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'ご連絡方法',
   'data'=>array(
 array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'メール', 'checked'=>'checked' ),
@@ -223,8 +223,8 @@ array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※お問い合わせ内容によって、メールをご希望の場合も電話連絡とさせて頂く場合があります。' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'電話番号',
   'valid_require'=>$required_string, 'error_require'=>'電話番号が入力されていません',
   'valid_phone'=>'q_phone', 'error_phone'=>'電話番号を正しく入力してください。数字と+(プラス)と-(ハイフン)と (半角スペース)が使えます',
@@ -243,27 +243,27 @@ array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'携帯' ),
 array( 'input'=>'携帯' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'希望日',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header' => '時間帯',
   'data'=>array(
 array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'class'=>'bginput', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降') ),
 array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望する時間帯。' ),
   ),
 ),
-//</tr>１行
+// }1行
 ),),
 ##</table>
 ##<table>
 array('title'=>'申し込み内容', 'table'=>array(
-//<tr>１行
+// 1行 {
 array('header'=>'お申し込みセミナー',
   'data'=>array(
 array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１' ),
@@ -273,32 +273,32 @@ array( 'input'=>' ' ),
 array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
   ),
 ),
-//</tr>１行
-//<tr>１行
+// }1行
+// 1行 {
 array('header'=>'お問い合わせ内容',
   'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
   'valid_maxlen'=>'q_other=200', 'error_maxlen'=>'お問い合わせ内容の文字数は200文字以内で入力してください',
   'help'=>'q_other',
   'data'=>array(
 array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'bginput ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
-array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span><strong>".'<br'.XHTML.'>' ),
+array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
-//</tr>１行
+// }1行
 ),),
-##</table>
-##<table>画像認証
-array('title_captcha' => '画像認証', 'table_captcha' => array(
-//<tr>１行画像認証
-array('header_captcha' => '画像認証',
+##</dl>
+##<dl>画像認証
+array('title_captcha' => '', 'table_captcha' => array(
+// { 1行画像認証
+array('header_captcha' => '',
   'valid_captcha' => $required_string,
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()
 ),
-//</tr>１行画像認証
+// } 1行画像認証
 ),),
-##</table>画像認証
+##</dl>画像認証
 ##<submit>入力画面
 array('action'=>'input',
   'data'=>array(
@@ -311,7 +311,7 @@ array( 'string'=>'</div>' ),
 ##<submit>確認画面
 array('action'=>'confirm',
   'data'=>array(
-array( 'string'=>'<div style="text-align: center;" class="text_center mt20 mb20">' ),
+array( 'string'=>'<div class="uk-container-center">' ),
 array( 'type'=>'submit', 'name'=>'goback', 'class'=>'button_form_prev', 'value'=>'戻る' ),
 array( 'string'=>'　' ),
 array( 'type'=>'submit', 'name'=>'submit', 'class'=>'button_form_next', 'value'=>'送信する' ),
@@ -338,9 +338,9 @@ function _fmMkSeni ($items, $action) {
     $buf = '<ul>'.LB;
     foreach ($items as $key => $value) {
         if ($action == $key) {
-            $buf .= '    <li class="on">'.$value.'</li>'.LB;
+            $buf .= '    <button class="uk-button uk-button-primary">'.$value.'</button>'.LB;
         } else {
-            $buf .= '    <li>'.$value.'</li>'.LB;
+            $buf .= '    <button class="uk-button">'.$value.'</button>'.LB;
         }
     }
     $buf .= '</ul>'.LB;
@@ -528,7 +528,7 @@ function _fmValidateItems ($items) {
                 $action = _fmGetAction('');
                 if ($key == 'table_captcha' && $action == 'finish') { continue; }
                 foreach ($value as $key2 => $value2) {
-                    // テーブル１行
+                    // テーブル1行
                     $errmsg = _fmValidateLines($value2);
                     if ($errmsg) { $errs[] = $errmsg; }
                 }
@@ -549,7 +549,7 @@ function _fmValidate ($items) {
         $buf = <<<END
 
 <p class="error">入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
-<ol class="errorList">
+<ol class="uk-list">
 $errmsg
 </ol>
 END;
@@ -563,9 +563,7 @@ function _fmMkTitle ($title) {
     return <<<END
 
     <h4>$title</h4>
-    <table class="formmail" cellspacing="0">
-        <colgroup><col width="{$_fmtblcolwidth}" /></colgroup>
-        <tbody>
+    <dl class="uk-description-list-horizontal">
 END;
 }
 
@@ -720,8 +718,8 @@ function _fmMkTable ($tables, $action) {
         $flg_valid_captcha=false;
         $errflg = '';
         $tdclass='';
-        $buf .= LB .'            <tr>' . LB;
-        $buf .= '                <th>';
+        $buf .= LB .'            ' . LB;
+        $buf .= '<dt class="uk-margin-top">';
         if (isset($lines['header'])) { $buf .= $lines['header']; }
         if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
         if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
@@ -729,9 +727,9 @@ function _fmMkTable ($tables, $action) {
         if (isset($lines['help']) && !empty($_fmhelppageurl) && $action == 'input') { $buf .= ' (<a href="javascript:void(0);" id="'.$lines['help'].'" class="tooltip">?</a>)'; }
         // エラーチェック
         if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
-        if ($errflg) { $tdclass=' class="warning_bgc"'; }
-        $buf .= '</th>'.LB;
-        $buf .= '                <td'.$tdclass.'>';
+        if ($errflg) { $tdclass=' class="uk-margin-top uk-block-primary"'; } else { $tdclass=' class="uk-margin-top"'; }
+        $buf .= '</dt>'.LB;
+        $buf .= '                <dd'.$tdclass.'>';
         if (isset($lines['data'])) {
             if ($flg_valid_captcha) {
                 $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
@@ -739,8 +737,7 @@ function _fmMkTable ($tables, $action) {
                 $buf .= _fmMkTable_Data($lines['data'], $action);
             }
         }
-        $buf .= '</td>'.LB;
-        $buf .= '            </tr>'.LB;
+        $buf .= '</dd>'.LB;
     }
     return $buf;
 }
@@ -761,8 +758,7 @@ function _fmMkForm ($items, $action) {
             }
             $buf .= <<<END
 
-        </tbody>
-    </table>
+    </dl>
 END;
         } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
             if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
@@ -775,8 +771,7 @@ END;
                 }
                 $buf .= <<<END
 
-        </tbody>
-    </table>
+    </dl>
 END;
             }
         } elseif (!empty($item['action'])) {         //送信ボタン
@@ -895,13 +890,13 @@ if ($action == 'input' || $action == 'confirm') {
 
     $retval = <<<END
 
-<div id="form_step">
+<div data-uk-button-checkbox>
 $seni
 </div>
 <div id="FORM">
 $valid
-<form name="subForm" method="post" action="{$pageurl}">
-<div id="tabs">
+<form name="subForm" class="uk-form uk-form-stacked" method="post" action="{$pageurl}">
+<div class="uk-form-row">
 $form
 </div>
 </form>
