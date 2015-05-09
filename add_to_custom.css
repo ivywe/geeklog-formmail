@@ -1,0 +1,6 @@
+/*--------------------------------------
+ FORM Contents
+---------------------------------------*/
+.ime_on { ime-mode: active; }
+.ime_off { ime-mode: inactive; }
+

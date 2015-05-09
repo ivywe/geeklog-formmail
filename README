@@ -54,24 +54,10 @@
  modern_curveテーマ は public_html/layout/modern_curve/css/custom.css
  (※基本は使用テーマの最後に読み込まれるcssの末尾へ追加)
 
-※お使いのGeeklogが2.0以上の場合
-
- add_to_gl20x_custom.css -> custom.css or style.css (末尾へ追加)
+ add_to_custom.css -> custom.css or style.css (末尾へ追加)
 
 
-※お使いのGeeklogが1.8の場合
-
- add_to_gl18x_custom.css -> custom.css or style.css (末尾へ追加)
-
-
-【インストール - JavaScript追加 - Geeklog1.8のみ】
-
-※お使いのGeeklogが1.8の場合のみヘルプ表示用のJavaScriptをアップロードする必要があります。
-
- add_to_gl18x_formmail.js --FTP Upload--> public_html/javascript/formmail.js
-
-
-【インストール - Geeklog2.1以下の場合は本体を少しハック】
+【インストール - Geeklog2.1未満の場合は本体を少しハック】
 CSRF対策にユニークなIDとしてtokenを利用しますがGeeklogのライブラリのtoken周りにバグがあるため以下のハックを適用します。
 
 
@@ -129,8 +115,8 @@ Geeklog2.0.0 : 1423行目付近
 
 【インストール - 確認】
 
- 1. ブラウザで以下のURLにアクセスして完了です。
-「http://あなたのサイト/staticpages/index.php?page=formmail」
+ 1. ブラウザで作成した静的ページPHPにアクセスして完了です。
+「http://あなたのサイト/staticpages/index.php?page=静的ページID」
  ※CSSや画像がキャッシュが利用され更新された内容でない場合がありますので、
  ※ブラウザの再表示を押してみてください。
 
@@ -193,7 +179,7 @@ maxlengthを項目設定の中に追加します。
           'name' => 'q_name_1',
           'size' => '40',
           'maxlength' => '40',    <--ここ
-          'class' => 'bginput ime_on',
+          'class' => 'ime_on',
           'value' => $username
     ),
 ========================================
@@ -209,7 +195,7 @@ class指定の中に"ime_on"を指定すると全角モードになり、"ime_of
           'name' => 'q_name_1',
           'size' => '40',
           'maxlength' => '40',
-          'class' => 'bginput ime_on',  <--ここのime_onで全角モードになる
+          'class' => 'ime_on',  <--ここのime_onで全角モードになる
           'value' => $username
     ),
 ========================================
@@ -244,7 +230,7 @@ valid_captcha => '必須用文字列'  : CAPTCHA専用チェック
 ========================================
             array('type' => 'textarea',
                   'name' => 'q_other',
-                  'class' => 'bginput ime_on',
+                  'class' => 'ime_on',
                   'style' => 'width: 95%; height: 100px;',
                   'onKeyup' => "var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';"  <--ここで残り入力可能文字数を表示。200が最大文字数。tasp1が表示するSPANのid。
             ),
@@ -294,7 +280,7 @@ JSLIB;
 //<tr>１行
 array('header'=>'希望日',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
+array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'ime_off' ),
   ),
 ),
 //</tr>１行
@@ -305,6 +291,9 @@ array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlen
 
 
 【更新履歴】
+2015/05/04  2.1.9
+ * tooltipによるヘルプ表示をUIkitのtooltipに変更
+ * table 組を削除してdlに変更
 2015/05/04  2.1.9
  * pageidを自動的に取得
  * CAPTCHAに対応

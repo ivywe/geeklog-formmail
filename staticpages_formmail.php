@@ -9,17 +9,10 @@
 // | Version: 2.1.9
 // +---------------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
-global $_fmhelppageurl,$_fmtblcolwidth,$_fmtokenttl; // FormMail変数
+global $_fmtokenttl; // FormMail変数
 if (!defined('XHTML')) define('XHTML', ' /');
 
 // --[[ 初期設定 ]]------------------------------------------------------------
-# ヘルプドキュメント用静的ページID
-#    ※ヘルプ無しにするなら空文字にする
-$helppageid = 'helpformmail';
-# ヘルプドキュメント用URL
-// ※直接ドキュメントファイルを用意するならそのURLを記載
-$_fmhelppageurl='';
-
 
 # 問合せを管理者へ通知の設定
 #    複数のE-mailはカンマ(,)で区切りで指定する(スペース等はあけない)
@@ -52,15 +45,13 @@ $essential_email = 'q_mail=q_mail_re';
 #     例) 'email,reemail'
 $propriety_email = 'q_mail,q_mail_re';
 
-# テーブルの項目名のwidth
-$_fmtblcolwidth='25%';
 
 # CSRF対策のTokenの有効時間(秒)
 $_fmtokenttl = 1800;
 # Refererチェック (CSRF対策)  チェックしない:0 チェックする:1
 $_spreferercheck = 1;
 # Refererエラーのメッセージ
-$_spreferererrormsg = '<p class="error">サイト外からのアクセスは禁止されています。</p>';
+$_spreferererrormsg = '<p class="uk-text-danger">サイト外からのアクセスは禁止されています。</p>';
 
 
 # ログイン済みならユーザ情報を利用する指定
@@ -109,7 +100,7 @@ $kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
 $seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認', 'finish' => '入力完了');
 
 # 必須入力の文字列
-$required_string = '<span class="spf_required">*必須</span>';
+$required_string = '<span class="uk-text-warning">*</span>';
 
 # ==画像認証関係==
 #   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
@@ -178,7 +169,7 @@ array( 'input'=>'<br'.XHTML.'>' ),
 array('header'=>'お名前（漢字）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'q_name',
+  'help'=>'全角で名前を入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'bginput ime_on', 'value'=>$username ),
 array( 'input'=>'&nbsp;※全角' ),
@@ -189,7 +180,7 @@ array( 'input'=>'&nbsp;※全角' ),
 array('header'=>'お名前（カタカナ）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（カタカナ）が入力されていません',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'q_kana',
+  'help'=>'全角カタカナでお名前(カタカナ)を入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'bginput ime_on' ),
 array( 'input'=>'&nbsp;※全角' ),
@@ -202,7 +193,7 @@ array('header'=>'メールアドレス',
   'valid_equal'=>$essential_email, 'error_equal'=>'メールアドレスが一致しません',
   'valid_email'=>$propriety_email, 'error_email'=>'メールアドレスを正しく入力してください',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
-  'help'=>'q_mail',
+  'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'bginput ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
@@ -230,7 +221,7 @@ array('header'=>'電話番号',
   'valid_phone'=>'q_phone', 'error_phone'=>'電話番号を正しく入力してください。数字と+(プラス)と-(ハイフン)と (半角スペース)が使えます',
   'valid_minlen'=>'q_phone=6', 'error_minlen'=>'電話番号の文字数は6文字以上で入力してください',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
-  'help'=>'q_phone',
+  'help'=>'半角数字と+(プラス)と-(ハイフン)と半角スペースで電話番号を入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'bginput ime_off' ),
 array( 'string'=>'<br'.XHTML.'>' ),
@@ -247,6 +238,7 @@ array( 'input'=>'携帯' ),
 // 1行 {
 array('header'=>'希望日',
   'data'=>array(
+// array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}"), 
 array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
   ),
 ),
@@ -278,7 +270,7 @@ array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
 array('header'=>'お問い合わせ内容',
   'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
   'valid_maxlen'=>'q_other=200', 'error_maxlen'=>'お問い合わせ内容の文字数は200文字以内で入力してください',
-  'help'=>'q_other',
+  'help'=>'全角200文字以内でお問い合わせを入力してください。',
   'data'=>array(
 array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'bginput ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
 array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
@@ -290,7 +282,7 @@ array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してく�
 ##<dl>画像認証
 array('title_captcha' => '', 'table_captcha' => array(
 // { 1行画像認証
-array('header_captcha' => '',
+array('header_captcha' => '画像認証',
   'valid_captcha' => $required_string,
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
@@ -302,8 +294,8 @@ array('header_captcha' => '',
 ##<submit>入力画面
 array('action'=>'input',
   'data'=>array(
-array( 'string'=>'<div style="text-align: center;" class="text_center mt20 mb20">' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'button_form_next', 'value'=>'入力項目確認画面へ' ),
+array( 'string'=>'<div class="uk-text-center">' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'入力項目確認画面へ' ),
 array( 'string'=>'</div>' ),
   ),
 ),
@@ -312,9 +304,9 @@ array( 'string'=>'</div>' ),
 array('action'=>'confirm',
   'data'=>array(
 array( 'string'=>'<div class="uk-container-center">' ),
-array( 'type'=>'submit', 'name'=>'goback', 'class'=>'button_form_prev', 'value'=>'戻る' ),
+array( 'type'=>'submit', 'name'=>'goback', 'class'=>'uk-button', 'value'=>'戻る' ),
 array( 'string'=>'　' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'button_form_next', 'value'=>'送信する' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'送信する' ),
 array( 'string'=>'</div>' ),
   ),
 ),
@@ -548,8 +540,8 @@ function _fmValidate ($items) {
         }
         $buf = <<<END
 
-<p class="error">入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
-<ol class="uk-list">
+<p class="uk-text-danger">入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
+<ol class="uk-text-danger">
 $errmsg
 </ol>
 END;
@@ -559,7 +551,6 @@ END;
 
 
 function _fmMkTitle ($title) {
-    global $_fmtblcolwidth;
     return <<<END
 
     <h4>$title</h4>
@@ -724,7 +715,7 @@ function _fmMkTable ($tables, $action) {
         if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
         if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
         if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
-        if (isset($lines['help']) && !empty($_fmhelppageurl) && $action == 'input') { $buf .= ' (<a href="javascript:void(0);" id="'.$lines['help'].'" class="tooltip">?</a>)'; }
+        if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
         // エラーチェック
         if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
         if ($errflg) { $tdclass=' class="uk-margin-top uk-block-primary"'; } else { $tdclass=' class="uk-margin-top"'; }
@@ -737,7 +728,7 @@ function _fmMkTable ($tables, $action) {
                 $buf .= _fmMkTable_Data($lines['data'], $action);
             }
         }
-        $buf .= '</dd>'.LB;
+        $buf .= '&nbsp;</dd>'.LB;
     }
     return $buf;
 }
@@ -807,7 +798,7 @@ function _fmMkCsv ($items, $level=0, $dupcheck=array()) {
 function _fmChkReferer ($pu,$err) {
     global $_CONF;  $msg = '';  $action = COM_applyFilter($_POST['action']);
     if (!isset($_SERVER['HTTP_REFERER'])) {
-        if (!empty($_POST)) { $msg = '<p class="error">REFERERチェックが設定されていますが環境変数にREFERERがセットされていないためチェックできません。サイト管理者にご連絡ください。</p>'; }
+        if (!empty($_POST)) { $msg = '<p class="uk-text-danger">REFERERチェックが設定されていますが環境変数にREFERERがセットされていないためチェックできません。サイト管理者にご連絡ください。</p>'; }
     } elseif (!empty($action) && ($action=='input' || $action=='confirm')) {
         if (strpos($_SERVER['HTTP_REFERER'],$pu)===FALSE) {
             $msg = $err;
@@ -863,26 +854,17 @@ if ($action == 'input' || $action == 'confirm') {
 /**
 * フォーム画面HTML { ここから
 */
-    // JS
+
+// JS
     if ($action == 'input') {
-        $flag_version_2 = version_compare($_CONF['supported_version_theme'], '2.0.0', '>=');
-        # JS tooltip
-        if (!empty($_fmhelppageurl) && isset($_SCRIPTS)) {
-            $_SCRIPTS->setJavaScript("var autocomplete_data = [];var glConfigDocUrl='{$_fmhelppageurl}';",true);
-            $_SCRIPTS->setJavaScriptLibrary('jquery.ui.autocomplete');
-            $_SCRIPTS->setJavaScriptLibrary('jquery.ui.tabs');
-            if ($flag_version_2) {
-                $_SCRIPTS->setJavascriptFile('formmail', '/javascript/admin.configuration.js');
-            } else {
-                $_SCRIPTS->setJavascriptFile('formmail', '/javascript/formmail.js');
-            }
-        }
         # JS datepicker
         if (!empty($jslib_datepicker) && isset($_SCRIPTS)) {
             $_SCRIPTS->setJavaScriptLibrary('jquery.ui.datepicker');
             $_SCRIPTS->setJavascript($jslib_datepicker,true);
         }
-    }
+	}
+
+
     // 遷移
     $seni = _fmMkSeni($seni_items, $action);
     // 入力フォーム
@@ -893,7 +875,7 @@ if ($action == 'input' || $action == 'confirm') {
 <div data-uk-button-checkbox>
 $seni
 </div>
-<div id="FORM">
+<div id="formmail">
 $valid
 <form name="subForm" class="uk-form uk-form-stacked" method="post" action="{$pageurl}">
 <div class="uk-form-row">
