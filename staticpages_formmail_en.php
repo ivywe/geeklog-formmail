@@ -710,7 +710,7 @@ function _fmMkTable ($tables, $action) {
         if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
         if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
         $buf .= '</dt>'.LB;
-        $buf .= '                <dd class="uk-margin-top">';
+        $buf .= '                <dd class="uk-margin-top' . $tdclass . '">';
         if (isset($lines['data'])) {
             if ($flg_valid_captcha) {
                 $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
