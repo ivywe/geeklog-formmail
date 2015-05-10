@@ -263,10 +263,10 @@ array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
 // 1行 {
 array('header'=>'お問い合わせ内容',
   'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
-  'valid_maxlen'=>'q_other=200', 'error_maxlen'=>'お問い合わせ内容の文字数は200文字以内で入力してください',
-  'help'=>'全角200文字以内でお問い合わせを入力してください。',
+  'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
+  'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
 array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),

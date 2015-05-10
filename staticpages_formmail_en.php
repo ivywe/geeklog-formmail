@@ -256,11 +256,11 @@ array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'Seminar3' ),
 // > table 1 row
 // < table 1 row
 array('header'=>'Comments',
-  'valid_maxlen'=>'q_other=200', 'error_maxlen'=>'Please complete within 200 characters.',
-  'help'=>'Please complete within 200 characters.',
+  'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'Please complete within 500 characters.',
+  'help'=>'Please complete within 500 characters.',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
-array( 'input'=>'<br'.XHTML.'>'."Please complete within 200 characters.<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
+array( 'input'=>'<br'.XHTML.'>'."Please complete within 500 characters.<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
 // > table 1 row
