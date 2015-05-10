@@ -1,5 +1,5 @@
-<!-- UIkit Datepicker Components { -->
+<!-- UIkit Components JS for formmail { -->
 <script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/datepicker.js"></script>
 <script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/form-select.js"></script>
 <script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/tooltip.js"></script>
-<!-- } UIkit Datepicker Components { -->
+<!-- } UIkit Components JS for formmail { -->
