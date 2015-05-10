@@ -296,6 +296,7 @@ array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlen
  * table 組を削除してdlに変更
  * UIkitのJSを日本語化サンプルとして追加:
    layout/theme/vendor/uikit/js/components/datepicker.js
+ * 英語版を追加しました。
 2015/05/04  2.1.9
  * pageidを自動的に取得
  * CAPTCHAに対応
