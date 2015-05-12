@@ -51,7 +51,7 @@ $_fmtokenttl = 1800;
 # Referer check (CSRF)  no check:0 check:1
 $_spreferercheck = 1;
 # Referer error message
-$_spreferererrormsg = '<p class="uk-text-danger">Access denied.</p>';
+$_spreferererrormsg = '<p class="uk-text-danger">アクセスできません。サイト管理者にご連絡ください。</p>';
 
 
 # use Geeklog's userset if logged-in
@@ -272,7 +272,7 @@ array('header'=>'お問い合わせ内容',
   'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
 array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder' => 'お問い合わせ内容を入力してください。' ),
-array( 'input'=>'<br'.XHTML.'>'."※<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
+array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
 // } table 1 row

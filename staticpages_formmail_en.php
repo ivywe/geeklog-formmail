@@ -110,7 +110,7 @@ $msg_spformmail_notinstall_captcha = 'CAPTCHA plugin is not installed';
 # CAPTCHA error message. If not set, CAPTCA plugin message is used.
 $msg_spformmail_valid_captcha = '';
 #
-#   ※ CAPTCHA templates
+#   CAPTCHA templates
 #   private/plugins/captcha/templates/captcha_contact.thtml
 # } === CAPTCHA ===
 
@@ -699,7 +699,7 @@ function _fmMkTable ($tables, $action) {
         $flg_valid_captcha=false;
         $errflg = '';
         $tdclass='';
-        // エラーチェック
+        // Error check
         if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
         if ($errflg) { $tdclass=' uk-text-danger'; } else { $tdclass=''; }
         $buf .= LB .'            ' . LB;
