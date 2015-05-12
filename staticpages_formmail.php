@@ -540,7 +540,7 @@ function _fmValidate ($items) {
         $buf = <<<END
 
 <div class="uk-alert uk-alert-danger">
-<p>Some error found. Please check below and correct your input.</p>
+<p>入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
 <ol class="uk-text-danger">
 $errmsg
 </ol>
@@ -800,7 +800,7 @@ function _fmMkCsv ($items, $level=0, $dupcheck=array()) {
 function _fmChkReferer ($pu,$err) {
     global $_CONF;  $msg = '';  $action = COM_applyFilter($_POST['action']);
     if (!isset($_SERVER['HTTP_REFERER'])) {
-        if (!empty($_POST)) { $msg = '<p class="uk-text-danger">REFERER check required. But REFERER is not set on your server. Please contact your server-administrator.</p>'; }
+        if (!empty($_POST)) { $msg = '<p class="uk-text-danger">REFERERチェックが設定されていますが環境変数にREFERERがセットされていないためチェックできません。サイト管理者にご連絡ください。</p>'; }
     } elseif (!empty($action) && ($action=='input' || $action=='confirm')) {
         if (strpos($_SERVER['HTTP_REFERER'],$pu)===FALSE) {
             $msg = $err;
@@ -911,9 +911,10 @@ END;
 $seni
 </div>
 <div>
-<p><strong>We've received your inquiry.</strong></p>
-<p>A confirmation e-mail has been sent to you.<br />
-If you do not receive it, please re-submit your inquiry with this form.</p>
+<p><strong>お問い合わせを受け付けました。</strong></p>
+<p>※お問い合わせ確認のメールを自動送信しました。<br />
+メールが届かない場合は、ご登録のメールアドレスが間違っている可能性があります。<br />
+その際は、お手数ですが再度お問い合わせください。</p>
 </div>
 
 END;
