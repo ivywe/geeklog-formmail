@@ -1,19 +1,28 @@
 // +---------------------------------------------------------------------------+
-// | FormMail Static Page for Geeklog 1.8 higher UIkit class added, English
+// | FormMail Static Page for Geeklog 1.8 higher UIkit class added, English    |
 // +---------------------------------------------------------------------------+
-// | staticpages_formmail_en.php
-// | 
-// | Version: 2.1.9 UIkit en
+// | staticpages_formmail_en.php                                               |
+// |                                                                           |
+// | Version: 2.1.9 UIkit en                                                   |
 // +---------------------------------------------------------------------------+
-// | Copyright (C) 2008-2015 by the following authors:
-// | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// |            : Tetsuko Komma - komma AT ivywe DOT co DOT jp
+// | Copyright (C) 2008-2015 by the following authors:                         |
+// | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp                   |
+// |            : Tetsuko Komma - komma AT ivywe DOT co DOT jp                 |
+// | Translated: kobab - geeklog.crimsonj.net                                  |
+// | Translated: Alleman Chie and Geeklog Japanese                             |
 // +---------------------------------------------------------------------------+
-global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
-global $_fmtokenttl; // FormMail変数
+// | This program was originally made for Japanese users. Several              |
+// | parts are therefore for Japanese users only and commented-out for         |
+// | this English version.                                                     |
+// | For the purpose of future upgrade for both of Japanese & English          |
+// | verions, those commented-out parts are remained. Wish English             |
+// | users understand this and ignore those parts when you use.                |
+// +---------------------------------------------------------------------------+
+global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog variables
+global $_fmtokenttl; // FormMail variables
 if (!defined('XHTML')) define('XHTML', ' /');
 
-// --[[ 初期設定 ]]------------------------------------------------------------
+// --[[ Default Setting ]]------------------------------------------------------
 
 # receipient set
 #    If 2 or more receipient, each email should be commmaed. no space allowed.

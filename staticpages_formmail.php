@@ -9,11 +9,11 @@
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
 // |            : Tetsuko Komma - komma AT ivywe DOT co DOT jp
 // +---------------------------------------------------------------------------+
-global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
-global $_fmtokenttl; // FormMail変数
+global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog variables
+global $_fmtokenttl; // FormMail variables
 if (!defined('XHTML')) define('XHTML', ' /');
 
-// --[[ 初期設定 ]]------------------------------------------------------------
+// --[[ Default Setting ]]------------------------------------------------------
 
 # receipient set
 #    If 2 or more receipient, each email should be commmaed. no space allowed.
