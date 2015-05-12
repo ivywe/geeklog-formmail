@@ -154,9 +154,9 @@ array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
 array('header'=>'法人様名',
   'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
+  'help'=>'法人様名を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'ime_on' ),
-array( 'input'=>'<br'.XHTML.'>' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'ime_on', 'placeholder' => '全角で入力してください。' ),
   ),
 ),
 // }1行
@@ -166,8 +166,7 @@ array('header'=>'お名前（漢字）',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on', 'value'=>$username ),
-array( 'input'=>'&nbsp;※全角' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on', 'value'=>$username, 'placeholder' => '全角で入力してください。' ),
   ),
 ),
 // }1行
@@ -177,8 +176,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前(カタカナ)を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on' ),
-array( 'input'=>'&nbsp;※全角' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on','placeholder' => '全角で入力してください。' ),
   ),
 ),
 // }1行
@@ -192,14 +190,13 @@ array('header'=>'メールアドレス',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email ),
-array( 'string'=>'<br'.XHTML.'>' ),
-array( 'input'=>'※確認のため、もう一度入力してください' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder' => '確認のため、もう一度入力してください。' ),
   ),
 ),
 // }1行
 // 1行 {
 array('header'=>'ご連絡方法',
+  'help'=>'ご連絡方法を選んでください。',
   'data'=>array(
 array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'メール', 'checked'=>'checked' ),
 array( 'input'=>'メール ' ),
@@ -232,6 +229,7 @@ array( 'input'=>'携帯' ),
 // }1行
 // 1行 {
 array('header'=>'希望日',
+  'help'=>'ご連絡希望日を選んでください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}"), 
   ),
@@ -251,6 +249,7 @@ array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望す�
 array('title'=>'申し込み内容', 'table'=>array(
 // 1行 {
 array('header'=>'お申し込みセミナー',
+  'help'=>'セミナーを選んでください。',
   'data'=>array(
 array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１' ),
 array( 'input'=>' ' ),
@@ -266,8 +265,8 @@ array('header'=>'お問い合わせ内容',
   'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
   'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
-array( 'input'=>'<br'.XHTML.'>'."※お問い合わせ内容を入力してください。<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder' => 'お問い合わせ内容を入力してください。' ),
+array( 'input'=>'<br'.XHTML.'>'."※<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
 // }1行
@@ -451,7 +450,7 @@ switch ($mode) {
         if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isKanaZen($_POST[$name])) { $msg = $errmsg; }
         break;
     // 全角ひらがなチェック
-    case 'kanazen':
+    case 'hirazen':
         if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isHiraZen($_POST[$name])) { $msg = $errmsg; }
         break;
     // 半角カタカナ以外かチェック

@@ -161,7 +161,7 @@ array('title'=>'Personal Information', 'table'=>array(
 array('header'=>'Organization',
   'help'=>'Type your organization.',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'', 'placeholder' => 'Type your organization.' ),
   ),
 ),
 // > table 1 row
@@ -170,7 +170,7 @@ array('header'=>'Name',
   'valid_require'=>$required_string, 'error_require'=>'Please type your name.',
   'help'=>'Type your name.',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'', 'value'=>$username ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'', 'value'=>$username, 'placeholder' => 'Type your name.'  ),
   ),
 ),
 // > table 1 row
@@ -210,7 +210,7 @@ array('header'=>'Phone',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'Phone number should not exceed 17 digit.',
   'help'=>'phone number: number, +, -, space',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'', 'placeholder' => 'phone number: number, +, -, space.' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'e.g.&nbsp;+81311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Home', 'checked'=>'checked' ),
@@ -259,8 +259,8 @@ array('header'=>'Comments',
   'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'Please complete within 500 characters.',
   'help'=>'Please complete within 500 characters.',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';" ),
-array( 'input'=>'<br'.XHTML.'>'."Please complete within 500 characters.<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder' => 'Please complete within 500 characters.'  ),
+array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
 // > table 1 row
@@ -439,12 +439,12 @@ switch ($mode) {
     // case 'eisuhan':
     //    if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && !_fmVld_isEisuHan($_POST[$name])) { $msg = $errmsg; }
     //    break;
-    // (For Japanese language only) Check em hiragana
-    case 'kanazen':
-        if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isKanaZen($_POST[$name])) { $msg = $errmsg; }
-        break;
-    // 全角ひらがなチェック
+    // (For Japanese language only) Check em kana
     // case 'kanazen':
+    //    if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isKanaZen($_POST[$name])) { $msg = $errmsg; }
+    //    break;
+    // (For Japanese language only) Check em hiragana
+    // case 'hirazen':
     //    if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isHiraZen($_POST[$name])) { $msg = $errmsg; }
     //    break;
     // (For Japanese language only) Check for non-katakana
