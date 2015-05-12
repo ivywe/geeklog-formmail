@@ -157,15 +157,15 @@ $lang = array(
 $form_items = array(
 ##<table>
 array('title'=>'Personal Information', 'table'=>array(
-// < table 1 row
+// table 1 row {
 array('header'=>'Organization',
   'help'=>'Type your organization.',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'', 'placeholder' => 'Type your organization.' ),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header'=>'Name',
   'valid_require'=>$required_string, 'error_require'=>'Please type your name.',
   'help'=>'Type your name.',
@@ -173,8 +173,8 @@ array('header'=>'Name',
 array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'', 'value'=>$username, 'placeholder' => 'Type your name.'  ),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header'=>'Email',
           'valid_require' => $required_string, 'error_require' => 'Please type your email address.',
           'valid_equal' => $essential_email, 'error_equal' => 'Email address not match.',
@@ -188,8 +188,8 @@ array( 'string'=>'<br'.XHTML.'>' ),
 array('input' => 'Please enter your e-mail address again to confirm.'),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
     array('header' => 'Inquiry Method', 
   'help'=>'Select inquiry method.',
   'data'=>array(
@@ -201,8 +201,8 @@ array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'We may call you in the event e-mail inquiry fails.' ),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header'=>'Phone',
   'valid_require'=>$required_string, 'error_require'=>'Please type your phone number.',
   'valid_phone'=>'q_phone', 'error_phone'=>'Please input your phone number correctly. Only numbers, plus, minus, and space characters are allowed as input.',
@@ -221,16 +221,16 @@ array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Mobile' ),
 array( 'input'=>'Mobile' ),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header'=>'Inquiry Date',
   'help'=>'Please indicate a date.',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'DD.MM.YYYY'}"), 
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header' => 'Inquiry Time',
   'help'=>'Please indicate a time.',
   'data'=>array(
@@ -238,12 +238,12 @@ array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'clas
 array('input' => '<br'.XHTML.'>*Please indicate a time we may call you if telephone inquiry is preferred.'),
   ),
 ),
-// > table 1 row
+// } table 1 row
 ),),
-##</table>
-##<table>
+## } table
+## table {
 array('title'=>'Preferences', 'table'=>array(
-// < table 1 row
+// table 1 row {
 array('header'=>'Apply',
   'data'=>array(
 array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'Seminar1' ),
@@ -253,8 +253,8 @@ array( 'input'=>' ' ),
 array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'Seminar3' ),
   ),
 ),
-// > table 1 row
-// < table 1 row
+// } table 1 row
+// table 1 row {
 array('header'=>'Comments',
   'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'Please complete within 500 characters.',
   'help'=>'Please complete within 500 characters.',
@@ -263,19 +263,19 @@ array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%;
 array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
-// > table 1 row
+// } table 1 row
 ),),
 ##</dl>
 ##<dl>CAPTCHA
 array('title_captcha' => '', 'table_captcha' => array(
-// { 1行CAPTCHA
+// { table 1 row CAPTCHA
 array('header_captcha' => 'CAPTCHA',
   'valid_captcha' => $required_string,
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()
 ),
-// } 1行画像認証
+// } table 1 row CAPTCHA
 ),),
 ##</dl>CAPTCHA
 ##<submit> input
