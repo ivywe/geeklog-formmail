@@ -278,8 +278,8 @@ array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br
 ),
 // } table 1 row
 ),),
-##</dl>
-##<dl>CAPTCHA
+## } table
+## table CAPTCHA {
 array('title_captcha' => '', 'table_captcha' => array(
 // { table 1 row CAPTCHA
 array('header_captcha' => '画像認証',
@@ -290,8 +290,8 @@ array('header_captcha' => '画像認証',
 ),
 // } table 1 row CAPTCHA
 ),),
-##</dl>CAPTCHA
-##<submit>入力画面
+## } table CAPTCHA
+## submit input {
 array('action'=>'input',
   'data'=>array(
 array( 'string'=>'<div class="uk-text-center">' ),
@@ -299,8 +299,8 @@ array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'入�
 array( 'string'=>'</div>' ),
   ),
 ),
-##</submit> input
-##<submit> confirm
+## } submit input
+## submit confirm {
 array('action'=>'confirm',
   'data'=>array(
 array( 'string'=>'<div class="uk-container-center">' ),
@@ -310,7 +310,7 @@ array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'送�
 array( 'string'=>'</div>' ),
   ),
 ),
-##</submit> confirm
+## } submit confirm
 );
 
 
@@ -416,7 +416,7 @@ switch ($mode) {
             if (!empty($attributes)) {
                 $values_key = explode(',', $attributes);
                 foreach ($values_key as $val_key) {
-                    // 最初のキーのときにチェック
+                    // check at initial key
                     if ($name == $val_key) {
                         $sum_val = 0;
                         foreach ($values_key as $chk_key) {
@@ -712,7 +712,7 @@ function _fmMkTable ($tables, $action) {
         $flg_valid_captcha=false;
         $errflg = '';
         $tdclass='';
-        // エラーチェック
+        // Error check
         if (!empty($_POST)) { $errflg = _fmValidateLines($lines); }
         if ($errflg) { $tdclass=' uk-text-danger'; } else { $tdclass=''; }
         $buf .= LB .'            ' . LB;

@@ -165,7 +165,7 @@ $lang = array(
 # table's item names
 #####
 $form_items = array(
-##<table>
+## table {
 array('title'=>'Personal Information', 'table'=>array(
 // table 1 row {
 array('header'=>'Organization',
@@ -220,7 +220,7 @@ array('header'=>'Phone',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'Phone number should not exceed 17 digit.',
   'help'=>'phone number: number, +, -, space',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'', 'placeholder' => 'phone number: number, +, -, space.' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'', 'placeholder' => 'e.g.&nbsp;+81311112222.' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'e.g.&nbsp;+81311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Home', 'checked'=>'checked' ),
@@ -270,13 +270,13 @@ array('header'=>'Comments',
   'help'=>'Please complete within 500 characters.',
   'data'=>array(
 array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder' => 'Please complete within 500 characters.'  ),
-array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
+array( 'input'=>'<br'.XHTML.'>' . "<strong><span id='tasp1'></span></strong>" ),
   ),
 ),
 // } table 1 row
 ),),
-##</dl>
-##<dl>CAPTCHA
+## } table
+## table CAPTCHA {
 array('title_captcha' => '', 'table_captcha' => array(
 // { table 1 row CAPTCHA
 array('header_captcha' => 'CAPTCHA',
@@ -287,8 +287,8 @@ array('header_captcha' => 'CAPTCHA',
 ),
 // } table 1 row CAPTCHA
 ),),
-##</dl>CAPTCHA
-##<submit> input
+## } table CAPTCHA
+## submit input {
 array('action'=>'input',
   'data'=>array(
 array( 'string'=>'<div class="uk-text-center">' ),
@@ -296,8 +296,8 @@ array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'Confi
 array( 'string'=>'</div>' ),
   ),
 ),
-##</submit> input
-##<submit> confirm
+## } submit input
+## submit confirm {
 array('action'=>'confirm',
   'data'=>array(
 array( 'string'=>'<div class="uk-container-center">' ),
@@ -307,7 +307,7 @@ array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'Submi
 array( 'string'=>'</div>' ),
   ),
 ),
-##</submit> confirm
+## } submit confirm
 );
 
 
@@ -413,7 +413,7 @@ switch ($mode) {
             if (!empty($attributes)) {
                 $values_key = explode(',', $attributes);
                 foreach ($values_key as $val_key) {
-                    // 最初のキーのときにチェック
+                    // check at initial key
                     if ($name == $val_key) {
                         $sum_val = 0;
                         foreach ($values_key as $chk_key) {
@@ -925,7 +925,7 @@ END;
     foreach ($fld_list as $k => $v) { $fld_list[$k] = ereg_replace("<br />", LB, $fld_list[$k]); }
     $lang['sign_admin'] = ereg_replace("<br />", LB, $lang['sign_admin']);
     $lang['sign_user'] = ereg_replace("<br />", LB, $lang['sign_user']);
-    // 入力内容
+    // input content
     $input4mail=<<<END
 
 Organization: {$fld_list['q_organizaiton']}
