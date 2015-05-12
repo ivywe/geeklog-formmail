@@ -1,12 +1,13 @@
 // +---------------------------------------------------------------------------+
-// | FormMail Static Page for Geeklog 1.8 higher
+// | FormMail Static Page for Geeklog 1.8 higher UIkit class added, Japanese
+// +---------------------------------------------------------------------------+
+// | staticpages_formmail.php
+// | 
+// | Version: 2.1.9 UIkit ja
 // +---------------------------------------------------------------------------+
 // | Copyright (C) 2008-2015 by the following authors:
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// | Sponser    : White Bear Family CO., LTD
-// | Coordinate : Adeliae Planning CO., LTD - www.e-adeliae.com
-// | Coordinate : IVY WE CO., LTD - www.ivywe.co.jp
-// | Version: 2.1.9UIkit
+// |            : Tetsuko Komma - komma AT ivywe DOT co DOT jp
 // +---------------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
 global $_fmtokenttl; // FormMail変数

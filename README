@@ -1,6 +1,7 @@
 静的ページPHPでフォームメールページを作成                         Version: 2.1.9
                                                               Create: 2015/05/04
-                             Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
+                           Authors:   Hiroshi Sakuramoto - hiro AT winkey DOT jp
+                                    Tetsuko Komma - komma AT ivywe DOT co DOT jp
 
 
 
@@ -291,7 +292,9 @@ array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlen
 
 
 【更新履歴】
-2015/05/10  2.1.9UIkit
+2015/05/13  2.1.9 Bootstrap
+ * Bootstrap 版を追加
+2015/05/10  2.1.9 UIkit
  * tooltipによるヘルプ表示をUIkitのtooltipに変更
  * table 組を削除してdlに変更
  * UIkitのJSを日本語化サンプルとして追加:
