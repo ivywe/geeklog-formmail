@@ -99,7 +99,7 @@ $required_string = '<span class="uk-text-warning">*</span>';
 
 # ==画像認証関係==
 #   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
-$msg_spformmail_notinstall_captcha = 'CAPTCHAプラグインがインストールされていません。';
+$msg_spformmail_notinstall_captcha = '';
 
 #   送信時に画像認証でエラーの場合のエラーメッセージ
 #     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
@@ -154,7 +154,7 @@ $form_items = array(
 array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
 array('header'=>'法人様名',
-  'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
+  'valid_notkanahan'=>'q_organization', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'法人様名を入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'ime_on', 'placeholder'=>'全角で入力してください。' ),
@@ -277,8 +277,8 @@ array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br
 // 1グループ 画像認証 {
 array('title_captcha' => '画像認証', 'table_captcha' => array(
 // 1行 画像認証 {
-array('header_captcha' => '画像認証',
-  'valid_captcha' => $required_string,
+array('header_captcha' => '',
+  'valid_captcha' => '',
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()

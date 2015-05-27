@@ -42,18 +42,9 @@
  PHP「PHPを実行する」
 
 
-【インストール - CSS用画像アップロード】
-
- 1. FTPソフトにて images を 公開領域の images へアップロードします。
-
-
 【インストール - CSS追加】
 
-※テーマにより追加するcssが違う場合があります。
- professionalテーマ は public_html/layout/professional/style.css
- professional_cssテーマ は public_html/layout/professional_css/custom.css
- modern_curveテーマ は public_html/layout/modern_curve/css/custom.css
- (※基本は使用テーマの最後に読み込まれるcssの末尾へ追加)
+使用テーマの最後に読み込まれるcssの末尾へ追加します。
 
  add_to_custom.css -> custom.css or style.css (末尾へ追加)
 
@@ -254,44 +245,10 @@ valid_captcha => '必須用文字列'  : CAPTCHA専用チェック
 
 
 
-+-----------------------------------------------------------------------------+
-| 日付項目でのカレンダー表示
-+-----------------------------------------------------------------------------+
-
-【日付入力でカレンダーを表示して選択】
-JavaScript + CSS にてカレンダーを表示して日付を選択できるようにします。
-
-その１）デフォルト設定
-
-カレンダー表示用のJavaScriptを以下のように設定します。
-
-以下の宣言の中にq_date1という部分があり、これは「その２）利用例」のnameと一致しています。変更する場合は両方を変更してください。
-========================================
-# カレンダー表示 jqueryui datepicker http://jqueryui.com/datepicker/
-#   ※使わない場合はJSLIB;までコメントアウトしてください。
-$jslib_datepicker = <<<JSLIB
-$(function() { $.datepicker.setDefaults( $.datepicker.regional['ja'] ); $("#q_date1").datepicker({ dateFormat: '$date_js_cal', dayNamesMin: ['日','月','火','水','木','金','土'], monthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], showMonthAfterYear: true }); });
-JSLIB;
-========================================
-
-
-その２）利用例
-カレンダーを利用するようidのq_date1という部分は「その１）デフォルト設定」の「JavaScriptライブラリ等の宣言」の中にあるq_date1と一致しています。変更する場合は両方を変更してください。
-========================================
-//<tr>１行
-array('header'=>'希望日',
-  'data'=>array(
-array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'ime_off' ),
-  ),
-),
-//</tr>１行
-========================================
-
-
-
-
-
 【更新履歴】
+2015/05/28  2.1.10
+ * 不要なnot_csv属性を書き出さないよう対応
+ * インデントを空白2マスに修正
 2015/05/13  2.1.9 Bootstrap
  * Bootstrap 版を追加
 2015/05/10  2.1.9 UIkit
