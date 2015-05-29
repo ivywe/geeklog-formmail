@@ -99,7 +99,7 @@ $required_string = '<span class="text-warning">*</span>';
 
 # ==画像認証関係==
 #   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
-$msg_spformmail_notinstall_captcha = 'CAPTCHAプラグインがインストールされていません。';
+$msg_spformmail_notinstall_captcha = '';
 
 #   送信時に画像認証でエラーの場合のエラーメッセージ
 #     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
@@ -154,9 +154,9 @@ $form_items = array(
 array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
 array('header'=>'法人様名',
-  'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
+  'valid_notkanahan'=>'q_organization', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'form-control ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'id'=>'organization', 'maxlength'=>'60', 'class'=>'form-control ime_on', 'placeholder'=>'全角で入力してください。' ),
   ),
 ),
 // } 1行
@@ -268,7 +268,7 @@ array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br
 array('title_captcha' => '画像認証', 'table_captcha' => array(
 // 1行 画像認証 {
 array('header_captcha' => '画像認証',
-  'valid_captcha' => $required_string,
+  'valid_captcha' => '',
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()
@@ -699,28 +699,38 @@ function _fmMkTable ($tables, $action) {
   foreach ($tables as $lines) {
     $flg_valid_captcha=false;
     $errflg = '';
-    $divclass=''; $labelclass=''; $formclass='';
+    $divclass='';
+    $formid=''; $labelfor='';
     // エラーチェック
     if (!empty($_POST) && !empty($_POST['action'])) { $errflg = _fmValidateLines($lines); }
-    if ($errflg) { $textclass=' has-error has-feedback'; $labelclass=' bg-danger'; $formclass=' form-danger'; }
+    if ($errflg) { $divclass=' has-error has-feedback'; }
+    for ($i=0; $i<count($lines['data']); $i++) {
+      if (isset($lines['data'][$i]['name']) && !isset($lines['data'][$i]['id'])) { $lines['data'][$i]['id'] = $lines['data'][$i]['name']; }
+      if ($errflg && isset($lines['data'][$i]['id'])) { $lines['data'][$i]['aria-describedby']=$lines['data'][$i]['id'].'Status'; }
+      if (isset($lines['data'][$i]['id'])) { $formid=$lines['data'][$i]['id'];break; }
+    }
+    if (!empty($formid)) { $labelfor=' for="'.$formid.'"'; }
     $buf .= LB;
-    $buf .= '    <div class="form-group'.$divclass.'"><label class="control-label'.$labelclass.'">';
+    $buf .= '  <div class="form-group'.$divclass.'">'.LB;
+    $buf .= '    <label class="col-sm-2 control-label"'.$labelfor.'>';
     if (isset($lines['header'])) { $buf .= $lines['header']; }
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
     if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
     $buf .= '</label>'.LB;
+    $buf .= '    <div class="col-sm-10">'.LB;
     if (isset($lines['data'])) {
       if ($flg_valid_captcha) {
         $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
       } else {
-        $buf .= _fmMkTable_Data($lines['data'], $action, $formclass);
+        $buf .= _fmMkTable_Data($lines['data'], $action, $formclass) . LB;
       }
     }
-    if ($errflg) {
-      $buf .= '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span><span id="inputError2Status" class="sr-only">(error)</span>';
+    if ($errflg && !empty($formid)) {
+      $buf .= '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span><span id="'.$formid.'Status" class="sr-only">(error)</span>'.LB;
     }
-    $buf .= '</div>'.LB;
+    $buf .= '    </div>'.LB;
+    $buf .= '  </div>'.LB;
   }
   return $buf;
 }
@@ -748,10 +758,6 @@ function _fmMkForm ($items, $action) {
             case 'table_captcha': $buf .= _fmMkTable($value, $action); break;
           }
         }
-        $buf .= <<<END
-
-    </dl>
-END;
       }
     } elseif (!empty($item['action'])) {         //送信ボタン
       if ($item['action'] == $action) {
@@ -851,9 +857,17 @@ if ($action == 'input' || $action == 'confirm') {
 $seni
 <div id="$page">
 $valid
-<form name="subForm" class="form-block" method="post" action="{$pageurl}">
+
+<div class="row">
+  <div class="col-md-6">
+
+<form class="form-horizontal" method="post" action="{$pageurl}">
 $form
 </form>
+
+  </div>
+</div>
+
 </div>
 
 END;
@@ -874,10 +888,8 @@ END;
 
   $out_html = <<<END
 
-<div data-uk-button-checkbox>
 $seni
-</div>
-<div>
+<div id="$page">
 <p><strong>お問い合わせを受け付けました。</strong></p>
 <p>※お問い合わせ確認のメールを自動送信しました。<br />
 メールが届かない場合は、ご登録のメールアドレスが間違っている可能性があります。<br />
