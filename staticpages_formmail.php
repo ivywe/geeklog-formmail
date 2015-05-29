@@ -189,9 +189,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-margin-bottom ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
   ),
 ),
 // } 1行
@@ -275,7 +275,7 @@ array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br
 ),),
 // } 1グループ
 // 1グループ 画像認証 {
-array('title_captcha' => '画像認証', 'table_captcha' => array(
+array('title_captcha' => '', 'table_captcha' => array(
 // 1行 画像認証 {
 array('header_captcha' => '',
   'valid_captcha' => '',
@@ -322,15 +322,15 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<ul>'.LB;
+  $buf = '<div class="uk-grid uk-margin">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <button class="uk-button uk-button-primary">'.$value.'</button>'.LB;
+      $buf .= '  <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-width-1-4 uk-margin-left">'.$value.'</div>'.LB;
     } else {
-      $buf .= '  <button class="uk-button">'.$value.'</button>'.LB;
+      $buf .= '  <div class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</div>'.LB;
     }
   }
-  $buf .= '</ul>'.LB;
+  $buf .= '</div>'.LB;
   return $buf;
 }
 
