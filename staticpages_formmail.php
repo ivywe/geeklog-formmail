@@ -167,7 +167,7 @@ array('header'=>'お名前（漢字）',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
   ),
 ),
 // } 1行
@@ -177,7 +177,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前（カタカナ）を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'placeholder'=>'全角で入力してください。' ),
   ),
 ),
 // } 1行
@@ -189,9 +189,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-margin-bottom ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'uk-margin-small-bottom ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
   ),
 ),
 // } 1行
@@ -216,7 +216,7 @@ array('header'=>'電話番号',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'help'=>'半角数字と＋（プラス）と－（ハイフン）と半角スペースで電話番号を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'ime_off' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'aria-required'=>'true', 'class'=>'ime_off' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
@@ -289,7 +289,7 @@ array('header_captcha' => '',
 ## submit 入力画面 {
 array('action'=>'input',
   'data'=>array(
-array( 'string'=>'<div class="uk-text-center">' ),
+array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
 array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'入力項目確認画面へ' ),
 array( 'string'=>'</div>' ),
   ),
@@ -298,7 +298,7 @@ array( 'string'=>'</div>' ),
 ## submit 確認画面 {
 array('action'=>'confirm',
   'data'=>array(
-array( 'string'=>'<div class="uk-text-center">' ),
+array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
 array( 'type'=>'submit', 'name'=>'goback', 'class'=>'uk-button', 'value'=>'戻る' ),
 array( 'string'=>'　' ),
 array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'送信する' ),
@@ -322,15 +322,15 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<div class="uk-grid uk-margin">'.LB;
+  $buf = '<ul class="uk-grid uk-margin">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-width-1-4 uk-margin-left">'.$value.'</div>'.LB;
+      $buf .= '  <li class="uk-panel uk-panel-box uk-panel-box-secondary uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
     } else {
-      $buf .= '  <div class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</div>'.LB;
+      $buf .= '  <li class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
     }
   }
-  $buf .= '</div>'.LB;
+  $buf .= '</ul>'.LB;
   return $buf;
 }
 
