@@ -162,10 +162,10 @@ array( 'type'=>'text', 'name'=>'q_organization', 'id'=>'organization', 'maxlengt
 // } 1行
 // 1行 {
 array('header'=>'お名前（漢字）',
-  'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません',
+  'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません', 
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'form-control ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'form-control ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
   ),
 ),
 // } 1行
@@ -174,7 +174,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（カタカナ）が入力されていません',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'form-control ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'form-control ime_on', 'placeholder'=>'全角で入力してください。' ),
   ),
 ),
 // } 1行
@@ -185,8 +185,8 @@ array('header'=>'メールアドレス',
   'valid_email'=>$propriety_email, 'error_email'=>'メールアドレスを正しく入力してください',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'form-control ime_off', 'value'=>$user_email, 'placeholder'=>'半角でメールアドレスを入力してください。' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'form-control email ime_off mt10', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'form-control ime_off', 'value'=>$user_email, 'placeholder'=>'半角でメールアドレスを入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'form-control email ime_off mt10', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
   ),
 ),
 // } 1行
@@ -210,7 +210,7 @@ array('header'=>'電話番号',
   'valid_minlen'=>'q_phone=6', 'error_minlen'=>'電話番号の文字数は6文字以上で入力してください',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'form-control ime_off', 'placeholder'=>'※例&nbsp;0311112222' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'aria-required'=>'true', 'class'=>'form-control ime_off', 'placeholder'=>'※例&nbsp;0311112222' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
 array( 'input'=>'自宅 &nbsp; ' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'勤務先' ),
