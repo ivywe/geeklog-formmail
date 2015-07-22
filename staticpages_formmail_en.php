@@ -325,7 +325,7 @@ function _fmMkSeni ($items, $action) {
   $buf = '<ul class="uk-grid uk-margin">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <li class="uk-panel uk-panel-box uk-panel-box-secondary uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
+      $buf .= '  <li class="uk-panel uk-panel-box uk-panel-box-primary uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
     } else {
       $buf .= '  <li class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
     }
