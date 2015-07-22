@@ -4,3 +4,12 @@
 .ime_on { ime-mode: active; }
 .ime_off { ime-mode: inactive; }
 
+.uk-button:disabled:hover {
+  background-color: #fafafa;
+  color: #999999;
+  border-color: rgba(0, 0, 0, 0.2);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: 0 1px 0 #ffffff;
+  cursor:default;
+}
