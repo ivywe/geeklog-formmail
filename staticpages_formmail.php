@@ -551,7 +551,7 @@ function _fmMkTitle ($title) {
   return <<<END
 
   <h3 class="uk-h3">$title</h3>
-  <dl class="uk-description-list-horizontal">
+  <!-- start block -->
 END;
 }
 
@@ -715,14 +715,14 @@ function _fmMkTable ($tables, $action) {
     if (!empty($_POST) && !empty($_POST['action'])) { $errflg = _fmValidateLines($lines); }
     if ($errflg) { $textclass=' uk-text-danger'; $formclass=' uk-form-danger'; }
     $buf .= LB;
-    $buf .= '    <dt class="uk-margin-top'.$tdclass.'">';
+    $buf .= '    <div class="uk-form-row"><label class="uk-form-label'.$tdclass.'">';
     if (isset($lines['header'])) { $buf .= $lines['header']; }
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
     if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
     if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
-    $buf .= '</dt>'.LB;
-    $buf .= '    <dd class="uk-margin-top' . $textclass . '">';
+    $buf .= '</label>'.LB;
+    $buf .= '    <div class="uk-form-controls' . $textclass . '">';
     if (isset($lines['data'])) {
       if ($flg_valid_captcha) {
         $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
@@ -730,7 +730,7 @@ function _fmMkTable ($tables, $action) {
         $buf .= _fmMkTable_Data($lines['data'], $action, $formclass);
       }
     }
-    $buf .= '</dd>'.LB;
+    $buf .= '</div></div>'.LB;
   }
   return $buf;
 }
@@ -751,7 +751,7 @@ function _fmMkForm ($items, $action) {
       }
       $buf .= <<<END
 
-    </dl>
+    <!-- end block -->
 END;
     } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
@@ -867,10 +867,10 @@ $seni
 </div>
 <div id="$page">
 $valid
-<form name="subForm" class="uk-form uk-form-stacked" method="post" action="{$pageurl}">
-<div class="uk-form-row">
+<form name="subForm" class="uk-form uk-form-horizontal" method="post" action="{$pageurl}">
+<fieldset data-uk-margin>
 $form
-</div>
+</fieldset>
 </form>
 </div>
 
