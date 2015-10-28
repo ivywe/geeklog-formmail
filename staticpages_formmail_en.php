@@ -865,7 +865,7 @@ if ($action == 'input' || $action == 'confirm') {
 <div data-uk-button-checkbox>
 $seni
 </div>
-<div id="$page">
+<div>
 $valid
 <form name="subForm" class="uk-form uk-form-stacked" method="post" action="{$pageurl}">
 <div class="uk-form-row">
@@ -1036,7 +1036,7 @@ END;
       }
       $str = date($date_csv) . $delimiter . substr($str,0,-1);
       $str .= LB;
-      if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang); }
+	  if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); 
       $fp = fopen($save_csv_file, 'a');
       fwrite($fp, $str);  # CSV書き出し
       fclose($fp);

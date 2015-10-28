@@ -855,7 +855,7 @@ if ($action == 'input' || $action == 'confirm') {
   $retval = <<<END
 
 $seni
-<div id="$page">
+<div>
 $valid
 
 <div class="row">
@@ -1030,7 +1030,7 @@ END;
       }
       $str = date($date_csv) . $delimiter . substr($str,0,-1);
       $str .= LB;
-      if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang); }
+	  if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); 
       $fp = fopen($save_csv_file, 'a');
       fwrite($fp, $str);  # CSV書き出し
       fclose($fp);

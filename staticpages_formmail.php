@@ -550,8 +550,8 @@ END;
 function _fmMkTitle ($title) {
   return <<<END
 
-  <h3 class="uk-h3">$title</h3>
-  <!-- start block -->
+  <fieldset>
+  <legend>$title</legend>
 END;
 }
 
@@ -751,7 +751,7 @@ function _fmMkForm ($items, $action) {
       }
       $buf .= <<<END
 
-    <!-- end block -->
+	</fieldset>
 END;
     } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
@@ -865,12 +865,10 @@ if ($action == 'input' || $action == 'confirm') {
 <div data-uk-button-checkbox>
 $seni
 </div>
-<div id="$page">
+<div class="uk-margin-left">
 $valid
 <form name="subForm" class="uk-form uk-form-horizontal" method="post" action="{$pageurl}">
-<fieldset data-uk-margin>
 $form
-</fieldset>
 </form>
 </div>
 
@@ -1036,7 +1034,7 @@ END;
       }
       $str = date($date_csv) . $delimiter . substr($str,0,-1);
       $str .= LB;
-      if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang); }
+	  if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); 
       $fp = fopen($save_csv_file, 'a');
       fwrite($fp, $str);  # CSV書き出し
       fclose($fp);
