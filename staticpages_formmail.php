@@ -45,7 +45,7 @@ $propriety_email = 'q_mail,q_mail_re';
 # CSRF対策のTokenの有効時間(秒)
 $_fmtokenttl = 1800;
 # Refererチェック (CSRF対策)  チェックしない:0 チェックする:1
-$_spreferercheck = 1;
+$_spreferercheck = 0;
 # Refererエラーのメッセージ
 $_spreferererrormsg = '<p class="uk-text-danger">アクセスできません。サイト管理者にご連絡ください。</p>';
 
@@ -143,7 +143,6 @@ $lang = array(
   'transmiterror'=>'処理中にエラーが発生しました。',
 // } システムエラーのメッセージ
 );
-
 
 
 #####
@@ -307,7 +306,6 @@ array( 'string'=>'</div>' ),
 ),
 ## } submit 確認画面
 );
-
 
 
 // --[[ 関数群 ]]---------------------------------------------------------------
@@ -715,7 +713,7 @@ function _fmMkTable ($tables, $action) {
     if (!empty($_POST) && !empty($_POST['action'])) { $errflg = _fmValidateLines($lines); }
     if ($errflg) { $textclass=' uk-text-danger'; $formclass=' uk-form-danger'; }
     $buf .= LB;
-    $buf .= '    <div class="uk-form-row"><label class="uk-form-label'.$tdclass.'">';
+    $buf .= '    <div class="uk-form-row'.$tdclass.'"><label class="uk-form-label">';
     if (isset($lines['header'])) { $buf .= $lines['header']; }
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
@@ -862,7 +860,7 @@ if ($action == 'input' || $action == 'confirm') {
 
   $retval = <<<END
 
-<div data-uk-button-checkbox>
+<div class="uk-hidden-small">
 $seni
 </div>
 <div class="uk-margin-left">
@@ -890,7 +888,7 @@ END;
 
   $out_html = <<<END
 
-<div data-uk-button-checkbox>
+<div class="uk-hidden-small">
 $seni
 </div>
 <div>
@@ -1034,7 +1032,7 @@ END;
       }
       $str = date($date_csv) . $delimiter . substr($str,0,-1);
       $str .= LB;
-	  if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); 
+      if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); }
       $fp = fopen($save_csv_file, 'a');
       fwrite($fp, $str);  # CSV書き出し
       fclose($fp);
