@@ -1,7 +1,8 @@
 <!-- UIkit Components JS for formmail { -->
+<script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/form-select.js"></script>
+<script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/tooltip.js"></script>
 <script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/datepicker.js"></script>
 <!-- for Japanese
 <script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/datepicker_ja.js"></script> -->
-<script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/form-select.js"></script>
-<script type="text/javascript" src="{layout_url}/vendor/uikit/js/components/tooltip.js"></script>
+
 <!-- } UIkit Components JS for formmail { -->

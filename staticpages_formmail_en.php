@@ -92,7 +92,7 @@ $save_csv_lang = 'UTF-8';
 // $kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
 
 # item names at screen transition
-$seni_items = array('input' => '<i class="uk-icon-chevron-right"></i> Input', 'confirm' => '<i class="uk-icon-chevron-right"></i> Confirm', 'finish' => '<i class="uk-icon-chevron-right"></i> Complete');
+$seni_items = array('input' => 'Input', 'confirm' => 'Confirm', 'finish' => 'Complete');
 
 # string for mondatory item
 $required_string = '<span class="uk-text-warning">*</span>';
@@ -222,7 +222,7 @@ array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{
 array('header' => 'Requested Inquiry Time',
   'help'=>'Please indicate a time we may call you if telephone inquiry is preferred.',
   'data'=>array(
-array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options' => array('selected' => 'Not Specified', 'values' => 'Not Specified,AM,Early PM, Late PM'),
+array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options'=>array('selected' => 'Not Specified', 'values' => 'Not Specified,AM,Early PM, Late PM') ),
 array( 'input'=>'<br'.XHTML.'>*Please indicate a time we may call you if telephone inquiry is preferred.' ),
   ),
 ),
@@ -302,7 +302,7 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-center">'.LB;
+  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-left">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
       $buf .= '<li class="uk-active"><span>'.$value.'</span></li>'.LB;
@@ -487,9 +487,9 @@ function _fmValidateLines ($lines) {
 function _fmValidateItems ($items) {
   $errs;
   foreach ($items as $item) {
-    // 各Group
+    // Each table
     foreach ($item as $key => $value) {
-      // 1 Group
+      // 1 table
       if ($key == 'table' || $key == 'table_captcha') {
         $action = _fmGetAction('');
         if ($key == 'table_captcha' && $action == 'finish') { continue; }
@@ -852,7 +852,7 @@ if ($action == 'input' || $action == 'confirm') {
 
   $retval = <<<END
 
-<div class="uk-hidden-small gl-form">
+<div class="gl-form">
 $seni
 </div>
 <div class="uk-margin-left">

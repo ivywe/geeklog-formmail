@@ -93,7 +93,7 @@ $kana_hantozen_itemname = 'q_kana_1,q_kana_2';
 $kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
 
 # 遷移の項目名
-$seni_items = array('input' => '<i class="uk-icon-chevron-right"></i> 情報入力', 'confirm' => '<i class="uk-icon-chevron-right"></i> 入力項目確認', 'finish' => '<i class="uk-icon-chevron-right"></i> 入力完了');
+$seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認', 'finish' => '入力完了');
 
 # 必須入力の文字列
 $required_string = '<span class="uk-text-warning">*</span>';
@@ -321,7 +321,7 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-center">'.LB;
+  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-left">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
       $buf .= '<li class="uk-active"><span>'.$value.'</span></li>'.LB;
@@ -861,7 +861,7 @@ if ($action == 'input' || $action == 'confirm') {
 
   $retval = <<<END
 
-<div class="uk-hidden-small gl-form">
+<div class="gl-form">
 $seni
 </div>
 <div class="uk-margin-left">

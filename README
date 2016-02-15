@@ -1,5 +1,5 @@
-静的ページPHPでフォームメールページを作成                         Version: 2.1.9
-                                                              Create: 2015/05/04
+Staticpages.PHP Formmail Version: 2.1.11
+                                                              Create: 2016/02/15
                            Authors:   Hiroshi Sakuramoto - hiro AT winkey DOT jp
                                     Tetsuko Komma - komma AT ivywe DOT co DOT jp
 
@@ -44,7 +44,7 @@
 
 【インストール - CSS追加】
 
-使用テーマの最後に読み込まれるcssの末尾へ追加します。
+テーマから読み込まれていない場合は、使用テーマの最後に読み込まれるcssの末尾へ追加します。
 
  add_to_custom.css -> custom.css or style.css (末尾へ追加)
 
