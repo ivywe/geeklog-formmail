@@ -160,7 +160,7 @@ array('header'=>'Name',
   'valid_require'=>$required_string, 'error_require'=>'Please type your name.',
   'help'=>'',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'value'=>$username, 'placeholder'=>'Please type your name.' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'required'=>'', 'value'=>$username, 'placeholder'=>'Please type your name.' ),
   ),
 ),
 // } table 1 row
@@ -171,9 +171,9 @@ array('header'=>'Email',
   'valid_email' => $propriety_email, 'error_email' => 'Please type out proper email address.',
   'help'=>'Please type your Email.',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'uk-margin-small-bottom ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-margin-small-bottom', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'Please enter your e-mail address again to confirm.' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'required'=>'', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'Please enter your e-mail address again to confirm.' ),
   ),
 ),
 // } table 1 row

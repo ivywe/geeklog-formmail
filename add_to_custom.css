@@ -1,7 +1,6 @@
 /*--------------------------------------
  FORM Contents
 ---------------------------------------*/
-/* formmail */
 div.gl-form .uk-breadcrumb > li:nth-child(n+2):before {
   content: ">>";
   display: inline-block;
