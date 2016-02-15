@@ -3,7 +3,8 @@
 // +---------------------------------------------------------------------------+
 // | Copyright (C) 2008-2015 by the following authors:
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// | Version: 2.1.10
+// | Authors    : Tetsuko Komma - komma AT ivywe DOT co DOT jp
+// | Version: 2.1.11
 // +---------------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
 global $_fmtokenttl; // FormMail変数
@@ -92,7 +93,7 @@ $kana_hantozen_itemname = 'q_kana_1,q_kana_2';
 $kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
 
 # 遷移の項目名
-$seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認', 'finish' => '入力完了');
+$seni_items = array('input' => '<i class="uk-icon-chevron-right"></i> 情報入力', 'confirm' => '<i class="uk-icon-chevron-right"></i> 入力項目確認', 'finish' => '<i class="uk-icon-chevron-right"></i> 入力完了');
 
 # 必須入力の文字列
 $required_string = '<span class="uk-text-warning">*</span>';
@@ -289,7 +290,7 @@ array('header_captcha' => '',
 array('action'=>'input',
   'data'=>array(
 array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'入力項目確認画面へ' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button uk-button-primary', 'value'=>'入力項目確認画面へ' ),
 array( 'string'=>'</div>' ),
   ),
 ),
@@ -300,7 +301,7 @@ array('action'=>'confirm',
 array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
 array( 'type'=>'submit', 'name'=>'goback', 'class'=>'uk-button', 'value'=>'戻る' ),
 array( 'string'=>'　' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'送信する' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button uk-button-primary', 'value'=>'送信する' ),
 array( 'string'=>'</div>' ),
   ),
 ),
@@ -320,12 +321,12 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<ul class="uk-grid uk-margin">'.LB;
+  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-center">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <li class="uk-panel uk-panel-box uk-panel-box-primary uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
+      $buf .= '<li class="uk-active"><span>'.$value.'</span></li>'.LB;
     } else {
-      $buf .= '  <li class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
+      $buf .= '<li><span>'.$value.'</span></li>'.LB;
     }
   }
   $buf .= '</ul>'.LB;
@@ -860,7 +861,7 @@ if ($action == 'input' || $action == 'confirm') {
 
   $retval = <<<END
 
-<div class="uk-hidden-small">
+<div class="uk-hidden-small gl-form">
 $seni
 </div>
 <div class="uk-margin-left">

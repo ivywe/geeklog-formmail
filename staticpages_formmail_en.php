@@ -3,314 +3,294 @@
 // +---------------------------------------------------------------------------+
 // | Copyright (C) 2008-2015 by the following authors:
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// | Version: 2.1.10
+// | Authors    : Tetsuko Komma - komma AT ivywe DOT co DOT jp
+// | Version: 2.1.11
 // +---------------------------------------------------------------------------+
-global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
-global $_fmtokenttl; // FormMail変数
+global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog var
+global $_fmtokenttl; // FormMail ttl
 if (!defined('XHTML')) define('XHTML', ' /');
 
-// --[[ 初期設定 ]]------------------------------------------------------------
-# 問合せを管理者へ通知の設定
-#    複数のE-mailはカンマ(,)で区切りで指定する(スペース等はあけない)
-#      例) 'info@hoge.com,admin@page.com'
-#    特定の入力項目に応じて送り先を変える
-#    ※この方法を利用する時は必ず $owner_email_item_name を指定してください。
-#      例) 'AAA=info@hoge.com,BBB=admin@page.com'
+// --[[ Default ]]--
+# receipient set
+#    If 2 or more receipient, each email should be commmaed. no space allowed.
+#      e.g.  'info@abcd.com,admin@wxyz.com'
+#    Set email for a certain colum data. If colum 1 is AAA, receipient is info@geeksite. 
+#    If colum 1 is BBB, receipient becomes to admin@geeksite
+#    You MUST set $owner_email_item_name if you use this feature.
+#      e.g.  'AAA=info@abcd.com,BBB=admin@wxyz.com'
 $owner_email=$_CONF['site_mail'];
 
-# 管理者Emailを入力項目から選択する項目名
-#   (selectなどの選択でメールの送り先を変えるのに利用)
-//  ※送り先を変える指定をしたら先頭の#を削除してください。(コメントをはずします)
+# Set colum name of receipient
+//  *Remember to remove * to uncomment after setting colum name.
 #$owner_email_item_name = 'q_mail_to';
 
-# メール送信者E-mail
+# Set colum name of receipient
+//  *Remember to remove * to uncomment after setting colum name.
 $email_from = $_CONF['site_mail'];
-#Geeklog1.5から，noreplyを指定できます。
 #$email_from = $_CONF['noreply_mail'];
 
-# 問合せ者のメールアドレスの項目名
+# inquirer email's item name
 $email_input_name = 'q_mail';
 
-# メール一致チェック項目指定
-#   メール確認でどちらも同じものを入力 というname属性を(=)で区切る(スペース等はあけない)
-#     例) 'email=reemail'
+# email double check
+#   no space allowed.
+#     e.g. 'email=reemail'
 $essential_email = 'q_mail=q_mail_re';
 
-# メールアドレスチェック項目指定
-#   入力された値がメールアドレスとして正しいかチェックをする
-#   INPUTタグの name属性の値をカンマ(,)区切りで指定する(スペース等はあけない)
-#     例) 'email,reemail'
+# email check
+#   check if input string is proper email address
+#   value of name attrubute with commas. no space is allowed.
+#     e.g. 'email,reemail'
 $propriety_email = 'q_mail,q_mail_re';
 
-# CSRF対策のTokenの有効時間(秒)
+# CSRF Token Time (second)
 $_fmtokenttl = 1800;
-# Refererチェック (CSRF対策)  チェックしない:0 チェックする:1
-$_spreferercheck = 1;
-# Refererエラーのメッセージ
-$_spreferererrormsg = '<p class="uk-text-danger">アクセスできません。サイト管理者にご連絡ください。</p>';
+# Referer check (CSRF) No check:0 Check:1
+$_spreferercheck = 0;
+# Referer error message
+$_spreferererrormsg = '<p class="uk-text-danger">An error occurred on the server when processing the URL. Please contact the system administrator.</p>';
 
 
-# ログイン済みならユーザ情報を利用
-#   Geeklogユーザー名やメールアドレスを利用
+# use Geeklog's userset if logged-in
+#   use username, full name & email of login users
 $username = ''; $user_email = '';
 if (!COM_isAnonUser()) {
     $username = isset($_USER['fullname']) ? $_USER['fullname'] : $_USER['username'];
     $user_email = $_USER['email'];
 }
 
-# CSVファイルに保存
-#   指定方法 保存しない: 0 , 保存する(カンマ区切り): 1 , 保存する(タブ区切り): 2
+# save as CSV file
+#   not save: 0, save with commas: 1, save with tabs: 2
 $save_csv = 1;
 
-# CSVファイル保存場所 (直接入力時は最後にスラッシュ必須)
+# path for CSV file to be saved. / is mandatory at the end of URL If you specify# bare # path.
 $save_csv_path = $_CONF['path_data'];
 
-# CSVファイル名
+# CSV file name
 $save_csv_name = $page.'.csv';
 
-# CSVファイル保存の文字コード
-#   文字コード変換をしない場合は '' と指定してください。
-#   機能がOFFになります。（文字化けするようなら機能を''で
-#   OFFにして別途フリーの文字変換ツールなどをご利用ください）
-# 注意) mb_convert_encodingで使える文字コードを指定してください
-#   例) UTF-8, SJIS, EUC-JP, JIS, ASCII
+# character code at saving CSV file
+#   If no code conversion is necesasry, make it blank, ie '' to disable this
+#   feature. If garbled, make this disabled and use another tool.
+#   Remember to use a code which mb_convert_encoding is covering
+#   e.g. UTF-8, SJIS, EUC-JP, JIS, ASCII
 $save_csv_lang = 'UTF-8';
 
-# 全角を半角に自動変換する項目名(英数字、スペース、カタカナ、ひらがな)
-#   入力された値を自動で変換する項目を指定
-#   INPUTタグの name属性の値をカンマ(,)区切りで指定する(スペース等はあけない)
-$zentohan_itemname = 'q_phone,q_code1_1,q_code2_1,q_code3_1,q_code1_2,q_code2_2,q_code3_2,q_code1_3,q_code2_3,q_code3_3';
+//# For Japanese language only.
+//#   Set colums that auto-convert from zenkaku to hankaku neccessary.
+//#   Specify name attribute's values one by one with commas. no space allowed.
+// $zentohan_itemname = 'q_phone,q_code1_1,q_code2_1,q_code3_1,q_code1_2,q_code2_2,q_code3_2,q_co
 
-# カタカナの半角をカタカナの全角に自動変換する項目名
-#   入力された値を自動で変換する項目を指定
-#   INPUTタグの name属性の値をカンマ(,)区切りで指定する(スペース等はあけない)
-$kana_hantozen_itemname = 'q_kana_1,q_kana_2';
+//# For Japanese language only.
+//#   Set colums that auto-convert from hankaku to zenkaku neccessary.
+//#   Specify name attribute's values one by one with commas. no space allowed.
+// $kana_hantozen_itemname = 'q_kana_1,q_kana_2';
 
-# ひらがなをカタカナに自動変換する項目名
-#   入力された値を自動で変換する項目を指定
-#   INPUTタグの name属性の値をカンマ(,)区切りで指定する(スペース等はあけない)
-$kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
+//# For Japanese language only.
+//#   Set colums that auto-convert from hiragana to katakana necessary.
+//#   Specify name attribute's values one by one with commas. no space allowed.
+// $kana_hiratokana_itemname = 'q_kana_1,q_kana_2';
 
-# 遷移の項目名
-$seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認', 'finish' => '入力完了');
+# item names at screen transition
+$seni_items = array('input' => '<i class="uk-icon-chevron-right"></i> Input', 'confirm' => '<i class="uk-icon-chevron-right"></i> Confirm', 'finish' => '<i class="uk-icon-chevron-right"></i> Complete');
 
-# 必須入力の文字列
+# string for mondatory item
 $required_string = '<span class="uk-text-warning">*</span>';
 
-# ==画像認証関係==
-#   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
+# ==CAPTCHA==
+#   error message if no CAPTHCA is istalled
 $msg_spformmail_notinstall_captcha = '';
 
-#   送信時に画像認証でエラーの場合のエラーメッセージ
-#     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
-#     ※空文字意外にするとそれを無視して固定メッセージにできます。
+#   error message after formmail used with CAPTCHA.
+#     *if blaked, error message of CAPTCHA plugin is used
+#     *if you speciy message here, it will be used
 $msg_spformmail_valid_captcha = '';
 
-#   ※ CAPTCHAのテンプレート
-#   private/plugins/captcha/templates/captcha_contact.thtml
-#
-
-# ==日付関係==
-#   JavaScriptカレンダーでの日付表記
-#     phpのdate参照 http://php.net/manual/ja/function.date.php
+# ==About date and time==
+#   The date on the following JavaScript calendar.
+#     php date http://php.net/manual/ja/function.date.php
 #       day   => 'd,D,j,l,N,S,w,z'
 #       month => 'F,m,M,n,t'
 #       year  => 'Y,y'
-#   ※テンプレート layout/theme/vendor/uikit/js/components/datepicker.js
+#    /vendor/uikit/js/components/datepicker.js
 
-#   メールに記載される受付日時表記
-#     phpのdateのものがすべて使えます http://www.php.net/manual/en/function.date.php
-$date_mail = 'Y年m月d日H:i';
-#   csv書き出し時、1列目に記載される日時表記
-#     phpのdateのものがすべて使えます http://www.php.net/manual/en/function.date.php
-$date_csv = 'Y/m/d H:i';
+#   The receipt date and time indicated in an email.
+#     Any php date format can be used here. (ref: http://www.php.net/manual/en/function.date.php)
+$date_mail = 'M j Y H:i';
+#   When the csv is outputted, the date and time are written to the first row of the csv.
+#     Any php date format can be used here. (ref: http://www.php.net/manual/en/function.date.php)
+$date_csv = 'M j Y H:i';
 
 
 #####
-# 表示メッセージ
+# display message
 #####
 $lang = array(
-// { 完了HTML＆メールのメッセージ
-  'receipt_admin' =>'管理者のみなさま'.LB.LB.$_CONF['site_name'].'サイトにおいて'.LB.'問い合わせがありました。'.LB.LB.'==========お問い合わせ =========='.LB.'受付日時：'.date($date_mail),
-  'receipt_user' =>'※本メールは、'.$_CONF['site_name'].'サイトより自動的に配信しています。'.LB.'このメールは送信専用のため、このメールにご返信いただけません。'.LB.'＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝'.LB.'お問い合わせありがとうございました。'.LB.LB.'========== お問い合わせ内容 =========='.LB.'受付日時：'.date($date_mail),
-  'subject_admin'=> '['.$_CONF['site_name'].']お問い合わせ',
-  'subject_user'=> '['.$_CONF['site_name'].']お問い合わせを受け付けました',
+// { complete & email message
+  'receipt_admin' =>'Dear admins,'.LB.LB.$_CONF['site_name'].' site received a inquiry.'.LB.LB.'========== Inquiry =========='.LB.'receipt at:'.date($date_mail),
+  'receipt_user' =>'*This email is sent from '.$_CONF['site_name'].' site automatically.'.LB.'This email address is used for transmission only and not repliable.'.LB.'============================='.LB.'Thank you very much for your inquiry.'.LB.LB.'========== Inquiry =========='.LB.'Receipt at:'.date($date_mail),
+  'subject_admin'=> '['.$_CONF['site_name'].']Inquiry',
+  'subject_user'=> '['.$_CONF['site_name'].']Thanks for your inquiry',
   'sign_admin'    => '-----------------------------------------'.LB.$_CONF['site_name'].LB.$_CONF['site_url'].LB.'-----------------------------------------',
-  'sign_user'    => '-----------------------------------------'.LB.$_CONF['site_name'].LB.'URL：' . $_CONF['site_url'].LB.'-----------------------------------------',
-// } 完了HTML＆メールのメッセージ
-// { システムエラーのメッセージ
-  'ownertransmiterror'=>'管理者向けメール処理中に一部のメールでエラーが発生しましたが、処理は継続しました。',
-  'transmiterror'=>'処理中にエラーが発生しました。',
-// } システムエラーのメッセージ
+  'sign_user'    => '-----------------------------------------'.LB.$_CONF['site_name'].LB.'URL:' . $_CONF['site_url'].LB.'-----------------------------------------',
+// } complete & email message
+// { system error message
+  'ownertransmiterror'=>'An error has occurred at several email addresses during processing owner email, but process continued and completed.',
+  'transmiterror'=>'An error has occurred during processing.',
+// } system error message
 );
 
 
-
 #####
-# フォーム項目の設定
+# table's item names
 #####
 $form_items = array(
-// 1グループ {
-array('title'=>'お客様情報', 'table'=>array(
-// 1行 {
-array('header'=>'法人様名',
-  'valid_notkanahan'=>'q_organization', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'法人様名を入力してください。',
+// 1 Group {
+array('title'=>'Personal Information', 'table'=>array(
+// table 1 row {
+array('header'=>'Organization',
+  'help'=>'Input Organization.',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'placeholder'=>'Please type your organization.' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'お名前（漢字）',
-  'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません',
-  'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'全角で名前を入力してください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Name',
+  'valid_require'=>$required_string, 'error_require'=>'Please type your name.',
+  'help'=>'',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'value'=>$username, 'placeholder'=>'Please type your name.' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'お名前（カタカナ）',
-  'valid_require'=>$required_string, 'error_require'=>'お名前（カタカナ）が入力されていません',
-  'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'全角カタカナでお名前（カタカナ）を入力してください。',
-  'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'class'=>'ime_on', 'placeholder'=>'全角で入力してください。' ),
-  ),
-),
-// } 1行
-// 1行 {
-array('header'=>'メールアドレス',
-  'valid_require'=>$required_string, 'error_require'=>'メールアドレスが入力されていません',
-  'valid_equal'=>$essential_email, 'error_equal'=>'メールアドレスが一致しません',
-  'valid_email'=>$propriety_email, 'error_email'=>'メールアドレスを正しく入力してください',
-  'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
-  'help'=>'半角でメールアドレスを入力してください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Email',
+  'valid_require' => $required_string, 'error_require' => 'Please type your email address.',
+  'valid_equal' => $essential_email, 'error_equal' => 'Email address not match.',
+  'valid_email' => $propriety_email, 'error_email' => 'Please type out proper email address.',
+  'help'=>'Please type your Email.',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'uk-margin-small-bottom ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'class'=>'ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'Please enter your e-mail address again to confirm.' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'ご連絡方法',
-  'help'=>'ご連絡方法を選んでください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Inquiry Method',
+  'help'=>'Select',
   'data'=>array(
-array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'メール', 'checked'=>'checked' ),
-array( 'input'=>'メール ' ),
-array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'電話' ),
-array( 'input'=>'電話 ' ),
+array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'Email', 'checked'=>'checked' ),
+array( 'input'=>'Email ' ),
+array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'Phone' ),
+array( 'input'=>'Phone ' ),
 array( 'string'=>'<br'.XHTML.'>' ),
-array( 'input'=>'※お問い合わせ内容によって、メールをご希望の場合も電話連絡とさせて頂く場合があります。' ),
+array( 'input'=>'We may call you in the event e-mail inquiry fails.' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'電話番号',
-  'valid_require'=>$required_string, 'error_require'=>'電話番号が入力されていません',
-  'valid_phone'=>'q_phone', 'error_phone'=>'電話番号を正しく入力してください。数字と+(プラス)と-(ハイフン)と (半角スペース)が使えます',
-  'valid_minlen'=>'q_phone=6', 'error_minlen'=>'電話番号の文字数は6文字以上で入力してください',
-  'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
-  'help'=>'半角数字と＋（プラス）と－（ハイフン）と半角スペースで電話番号を入力してください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Phone',
+  'valid_require'=>$required_string, 'error_require'=>'Please type your phone number.',
+  'valid_phone'=>'q_phone', 'error_phone'=>'Please input your phone number correctly. Only numbers, plus, minus, and space characters are allowed as input.',
+  'valid_minlen'=>'q_phone=6', 'error_minlen'=>'Phone number shouold be longer than 6 digit.',
+  'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'Phone number should not exceed 17 digit.',
+  'help'=>'e.g. +00 0 0000 0000',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'aria-required'=>'true', 'class'=>'ime_off' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'aria-required'=>'true'),
 array( 'string'=>'<br'.XHTML.'>' ),
-array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
-array( 'input'=>'自宅 &nbsp; ' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'勤務先' ),
-array( 'input'=>'勤務先 &nbsp; ' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'携帯' ),
-array( 'input'=>'携帯' ),
+array( 'input'=>'e.g. +00 0 0000 0000<br'.XHTML.'>' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Home', 'checked'=>'checked' ),
+array( 'input'=>'Home &nbsp; ' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Office' ),
+array( 'input'=>'Office &nbsp; ' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'Mobile' ),
+array( 'input'=>'Mobile' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'希望日',
-  'help'=>'ご連絡希望日を選んでください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Requested Inquiry Date',
+  'help'=>'Requested Inquiry Date.',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}" ),
+array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'MM.DD.YYYY'}" ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header' => '時間帯',
-  'help'=>'ご連絡時間帯を選んでください。',
+// } table 1 row
+// table 1 row {
+array('header' => 'Requested Inquiry Time',
+  'help'=>'Please indicate a time we may call you if telephone inquiry is preferred.',
   'data'=>array(
-array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降') ),
-array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望する時間帯。' ),
+array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options' => array('selected' => 'Not Specified', 'values' => 'Not Specified,AM,Early PM, Late PM'),
+array( 'input'=>'<br'.XHTML.'>*Please indicate a time we may call you if telephone inquiry is preferred.' ),
   ),
 ),
-// } 1行
+// } table 1 row
 ),),
-// } 1グループ
-// 1グループ {
-array('title'=>'申し込み内容', 'table'=>array(
-// 1行 {
-array('header'=>'お申し込みセミナー',
-  'help'=>'セミナーを選んでください。',
+// } 1 Group
+// 1 Group {
+array('title'=>'Preferences', 'table'=>array(
+// table 1 row {
+array('header'=>'Apply',
+  'help'=>'Select seminar',
   'data'=>array(
-array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'Seminar1' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'セミナー２' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'Seminar2' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'Seminar3' ),
   ),
 ),
-// } 1行
-// 1行 {
-array('header'=>'お問い合わせ内容',
-  'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
-  'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
-  'help'=>'全角500文字以内でお問い合わせを入力してください。',
+// } table 1 row
+// table 1 row {
+array('header'=>'Comments',
+  'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'Please complete within 500 characters.',
+  'help'=>'Please complete within 500 characters.',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'Please complete within 500 characters.' ),
 array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
-// } 1行
+// } table 1 row
 ),),
-// } 1グループ
-// 1グループ 画像認証 {
+// } 1 Group
+// Group table (CAPTCHA)  {
 array('title_captcha' => '', 'table_captcha' => array(
-// 1行 画像認証 {
+// table 1 row Captcha  {
 array('header_captcha' => '',
   'valid_captcha' => '',
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()
 ),
-// } 1行 画像認証
+// } table (CAPTCHA)
 ),),
-// } 1グループ 画像認証
-## submit 入力画面 {
+// } 1 Group table (CAPTCHA)
+## submit button - input  {
 array('action'=>'input',
   'data'=>array(
 array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'入力項目確認画面へ' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button uk-button-primary', 'value'=>'Confirm' ),
 array( 'string'=>'</div>' ),
   ),
 ),
-## } submit 入力画面
-## submit 確認画面 {
+## } submit button - input
+## submit button - confirm  {
 array('action'=>'confirm',
   'data'=>array(
 array( 'string'=>'<div class="uk-text-center uk-margin-top">' ),
-array( 'type'=>'submit', 'name'=>'goback', 'class'=>'uk-button', 'value'=>'戻る' ),
+array( 'type'=>'submit', 'name'=>'goback', 'class'=>'uk-button', 'value'=>'Return to the previous page' ),
 array( 'string'=>'　' ),
-array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button', 'value'=>'送信する' ),
+array( 'type'=>'submit', 'name'=>'submit', 'class'=>'uk-button uk-button-primary', 'value'=>'Submit' ),
 array( 'string'=>'</div>' ),
   ),
 ),
-## } submit 確認画面
+## } submit button - confirm
 );
 
 
-
-// --[[ 関数群 ]]---------------------------------------------------------------
+// --[[ Functions ]]--
 if(!function_exists('_fmGetAction')){
 function _fmGetAction ($err) {
   $buf = '';
@@ -322,12 +302,12 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<ul class="uk-grid uk-margin">'.LB;
+  $buf = '<ul class="uk-breadcrumb uk-subnav uk-flex-center">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <li class="uk-panel uk-panel-box uk-panel-box-primary uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
+      $buf .= '<li class="uk-active"><span>'.$value.'</span></li>'.LB;
     } else {
-      $buf .= '  <li class="uk-panel uk-panel-box uk-width-1-4 uk-margin-left">'.$value.'</li>'.LB;
+      $buf .= '<li><span>'.$value.'</span></li>'.LB;
     }
   }
   $buf .= '</ul>'.LB;
@@ -371,19 +351,19 @@ function _fmChkValidate ($mode, $datas, $errmsg, $attributes = '') {
   foreach ($datas as $data) {
     if (isset($data['type'])) {
       $name = $data['name'];
-// 入力チェック {
+// Check input {
 switch ($mode) {
-  // 必須チェック
+  // check required item
   case 'require':
     if (empty($data['notrequire']) && empty($_POST[$name]) && $_POST[$name] != "0") { $msg = $errmsg; }
     break;
-  // 一致チェック
+  // check matching
   case 'equal':
     if (!empty($attributes)) {
       $es_emails = explode(',', $attributes);
       foreach ($es_emails as $es_email) {
         list($eq1,$eq2) = explode('=', $es_email);
-        // 最初のキー かつ チェックするキーが存在
+        // initial key ANT it exist
         if ($name == $eq1 && !empty($_POST[$eq2])) {
           if ($_POST[$eq1] != $_POST[$eq2]) {
             $msg = $errmsg;
@@ -392,7 +372,7 @@ switch ($mode) {
       }
     }
     break;
-  // メールチェック
+  // email check
   case 'email':
     if (!empty($attributes)) {
       $pr_emails = explode(',', $attributes);
@@ -426,39 +406,39 @@ switch ($mode) {
       }
     }
     break;
-  // 数値のみかチェック
+  // check if numeric
   case 'numeric':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && !ctype_digit($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 電話番号かチェック
+  // check if phone
   case 'phone':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && !_fmVld_isPhone($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 半角チェック
+  // (For Japanese language only) Check byte
   case 'hankaku':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && !_fmVld_isHankaku($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 全角チェック
+  // (For Japanese language only) Check em
   case 'zenkaku':
     if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isZenkaku($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 半角英数字チェック
+  // (For Japanese language only) Alphanumeric check
   case 'eisuhan':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && !_fmVld_isEisuHan($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 全角カタカナチェック
+  // (For Japanese language only) Check em katakana
   case 'kanazen':
     if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isKanaZen($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 全角ひらがなチェック
+  // (For Japanese language only) Check em hiragana
   case 'hirazen':
     if (!empty($_POST[$name]) && in_array($name,explode(',',$attributes)) && !_fmVld_isHiraZen($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 半角カタカナ以外かチェック
+  // (For Japanese language only) Check for non-katakana
   case 'notkanahan':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0") && in_array($name,explode(',',$attributes)) && _fmVld_isNotKanaHan($_POST[$name])) { $msg = $errmsg; }
     break;
-  // 文字数チェック
+  // check max length
   case 'maxlen':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0")) {
       foreach (explode(',', $attributes) as $attr1) {
@@ -469,7 +449,7 @@ switch ($mode) {
       }
     }
     break;
-  // 最低文字数チェック
+  // check min length
   case 'minlen':
     if ((!empty($_POST[$name]) || $_POST[$name] == "0")) {
       foreach (explode(',', $attributes) as $attr1) {
@@ -481,10 +461,10 @@ switch ($mode) {
     }
     break;
 }
-// } 入力チェック
+// } check input
     }
   }
-  // 画像認証チェック
+  // check CAPTCHA
   if ( $mode == 'captcha' ) { $msg = _fmVldCAPTCHA('contact', $errmsg); }
   return $msg;
 }
@@ -492,10 +472,10 @@ switch ($mode) {
 function _fmValidateLines ($lines) {
   $errmsg;
   foreach (array('require','equal','email','notzero','numeric','phone','hankaku','zenkaku','eisuhan','kanazen','hirazen','notkanahan','captcha','maxlen','minlen') as $chk) {
-    // 必須,一致,メール,画像認証,エラー のチェック
+    // check require,match,email,CAPTCH,error
     if (isset($lines['valid_'.$chk])) {
       $errmsg = _fmChkValidate($chk, $lines['data'], $lines['error_'.$chk], $lines['valid_'.$chk]);
-      // エラーがあれば配列に格納
+      // arrays if error found
       if ($errmsg) {
         break;
       }
@@ -507,14 +487,14 @@ function _fmValidateLines ($lines) {
 function _fmValidateItems ($items) {
   $errs;
   foreach ($items as $item) {
-    // 各グループ
+    // 各Group
     foreach ($item as $key => $value) {
-      // 1グループ
+      // 1 Group
       if ($key == 'table' || $key == 'table_captcha') {
         $action = _fmGetAction('');
         if ($key == 'table_captcha' && $action == 'finish') { continue; }
         foreach ($value as $key2 => $value2) {
-          // 1行
+          // table 1 row
           $errmsg = _fmValidateLines($value2);
           if ($errmsg) { $errs[] = $errmsg; }
         }
@@ -535,7 +515,7 @@ function _fmValidate ($items) {
     $buf = <<<END
 
 <div class="uk-alert uk-alert-danger">
-<p>入力エラーがありました。下記について再度ご確認の上、ご記入ください。</p>
+<p>Some error found. Please check below and correct your input.</p>
 <ol class="uk-text-danger">
 $errmsg
 </ol>
@@ -550,8 +530,8 @@ END;
 function _fmMkTitle ($title) {
   return <<<END
 
-  <h3 class="uk-h3">$title</h3>
-  <dl class="uk-description-list-horizontal">
+  <fieldset>
+  <legend>$title</legend>
 END;
 }
 
@@ -661,9 +641,9 @@ function _fmMkForm_Item ($items, $action, $addclass) {
 function _fmMkTable_Data ($datas, $action, $addclass='') {
   $buf = '';
   foreach ($datas as $data) {
-    // １つのデータ
+    // 1 つのデータ
     if (!empty($data['type'])) {
-      // フォーム
+      // Form
       $buf .= _fmMkForm_Item($data, $action, $addclass);
     }
     else {
@@ -711,18 +691,18 @@ function _fmMkTable ($tables, $action) {
     $flg_valid_captcha=false;
     $errflg = '';
     $textclass=''; $formclass='';
-    // エラーチェック
+    // Error check
     if (!empty($_POST) && !empty($_POST['action'])) { $errflg = _fmValidateLines($lines); }
     if ($errflg) { $textclass=' uk-text-danger'; $formclass=' uk-form-danger'; }
     $buf .= LB;
-    $buf .= '    <dt class="uk-margin-top'.$tdclass.'">';
+    $buf .= '    <div class="uk-form-row'.$tdclass.'"><label class="uk-form-label">';
     if (isset($lines['header'])) { $buf .= $lines['header']; }
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
     if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
     if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
-    $buf .= '</dt>'.LB;
-    $buf .= '    <dd class="uk-margin-top' . $textclass . '">';
+    $buf .= '</label>'.LB;
+    $buf .= '    <div class="uk-form-controls' . $textclass . '">';
     if (isset($lines['data'])) {
       if ($flg_valid_captcha) {
         $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
@@ -730,7 +710,7 @@ function _fmMkTable ($tables, $action) {
         $buf .= _fmMkTable_Data($lines['data'], $action, $formclass);
       }
     }
-    $buf .= '</dd>'.LB;
+    $buf .= '</div></div>'.LB;
   }
   return $buf;
 }
@@ -740,10 +720,10 @@ function _fmMkForm ($items, $action) {
   $ttl = (isset($_fmtokenttl) && $_fmtokenttl > 1) ? $_fmtokenttl : 1800;
   $buf = '';
   foreach ($items as $item) {
-    // 各グループ
+    // 各Group
     if (!empty($item['table'])) {
       foreach ($item as $key => $value) {
-        // 1グループ
+        // 1 Group
         switch ($key) {
           case 'title': $buf .= _fmMkTitle($value); break;
           case 'table': $buf .= _fmMkTable($value, $action); break;
@@ -751,12 +731,12 @@ function _fmMkForm ($items, $action) {
       }
       $buf .= <<<END
 
-    </dl>
+	</fieldset>
 END;
-    } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
+    } elseif (!empty($item['table_captcha'])) {  // Captcha Table 
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
         foreach ($item as $key => $value) {
-          // １テーブル
+          // 1 Table 
           switch ($key) {
             case 'title_captcha': $buf .= _fmMkTitle($value); break;
             case 'table_captcha': $buf .= _fmMkTable($value, $action); break;
@@ -767,7 +747,7 @@ END;
     </dl>
 END;
       }
-    } elseif (!empty($item['action'])) {         //送信ボタン
+    } elseif (!empty($item['action'])) {         // Send Button
       if ($item['action'] == $action) {
         $buf .= LB . '  <input type="hidden" name="action" value="' . $action . '"' . XHTML . '>';
         $buf .= LB . _fmMkTable_Data($item['data'], $action);
@@ -800,7 +780,7 @@ function _fmMkCsv ($items, $level=0, $dupcheck=array()) {
 function _fmChkReferer ($pu,$err) {
   global $_CONF;  $msg = '';  $action = COM_applyFilter($_POST['action']);
   if (!isset($_SERVER['HTTP_REFERER'])) {
-    if (!empty($_POST)) { $msg = '<p class="uk-text-danger">REFERERチェックが設定されていますが環境変数にREFERERがセットされていないためチェックできません。サイト管理者にご連絡ください。</p>'; }
+    if (!empty($_POST)) { $msg = '<p class="uk-text-danger">REFERER error. Please contact admin.</p>'; }
   } elseif (!empty($action) && ($action=='input' || $action=='confirm')) {
     if (strpos($_SERVER['HTTP_REFERER'],$pu)===FALSE) {
       $msg = $err;
@@ -814,12 +794,22 @@ function _fmChkReferer ($pu,$err) {
 
 
 
-// --[[ 初期処理 ]]------------------------------------------------------------
-# POSTデータを直接変換 (全角から半角へ、カタカナ半角からカタカナ全角へ)
+// --[[ initial process ]]--
+//# For Japanese language only.
+//# Direct convert of POST data, ie. from em-size to normal-width and from 
+//# the katakana normal-width to the katakana. This is for Japanese user only.
+//# This program was originally made for Japanese users. Several parts are 
+//# therefore for Japanese users only. We commented those parts 
+//# out for this English version. 
+//# For the convenience of authors of future upgrade for both of Japanese 
+//# & English versions, those parts for Japanese users are remained in php 
+//# files. Wish English users understand this and ignore those parts when 
+//# you use this php.
+
 if (!empty($zentohan_itemname)) { foreach (explode(',',$zentohan_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'askh'); } }
 if (!empty($kana_hantozen_itemname)) { foreach (explode(',',$kana_hantozen_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'K'); } }
 if (!empty($kana_hiratokana_itemname)) { foreach (explode(',',$kana_hiratokana_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'C'); } }
-# データを保存用に加工
+# process data for saving
 foreach ($_POST as $k => $v) {
     $fld_list[$k] = preg_replace('/,/', '，', $_POST[$k]);
     $fld_list[$k] = preg_replace('/"/', '”', $fld_list[$k]);
@@ -829,20 +819,20 @@ foreach ($_POST as $k => $v) {
     $fld_list[$k] = preg_replace(preg_quote('#'.chr(92).'#'), '￥', $fld_list[$k]);
     $fld_list[$k] = COM_applyFilter($fld_list[$k]);
 }
-# CSVファイルのフルパス
+# full path of CSV file
 $save_csv_file = $save_csv_path . $save_csv_name;
-# idからurlを作成
+# create pageurl from pageid
 if (!empty($page)) { $pageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$page); }
 # CSRF
 if (!empty($_POST) && !SECINT_checkToken()) { $m=isset($_POST[$email_input_name]) ? 'email='.$_POST[$email_input_name].' ' : ''; COM_accessLog("tried {$m}to staticpage({$pageid}) failed CSRF checks."); header('Location: '.$pageurl); exit; }
 
 
-// Refererチェック
+// Referer Check
 if (!empty($_spreferercheck) && $_spreferercheck = 1) {
   $valid = _fmChkReferer($pageurl,$_spreferererrormsg);
 }
 
-// エラーチェック
+// error check
 if (empty($valid) && !empty($_POST) && !empty($_POST['action'])) {
   $valid = _fmValidate($form_items);
 }
@@ -850,87 +840,81 @@ $action = _fmGetAction($valid);
 
 
 
-// --[[ 第1ステップ : フォーム表示(入力＆確認) ]]-------------------------------
+// --[[ first step: display form (type & confirm) ]]--
 if ($action == 'input' || $action == 'confirm') {
 /**
-* フォーム画面HTML { ここから
+* FormDisplay HTML { From here 
 */
-  // 遷移
+  // transition
   $seni = _fmMkSeni($seni_items, $action);
-  // 入力フォーム
+  // input form
   $form = _fmMkForm($form_items, $action);
 
   $retval = <<<END
 
-<div data-uk-button-checkbox>
+<div class="uk-hidden-small gl-form">
 $seni
 </div>
-<div>
+<div class="uk-margin-left">
 $valid
-<form name="subForm" class="uk-form uk-form-stacked" method="post" action="{$pageurl}">
-<div class="uk-form-row">
+<form name="subForm" class="uk-form uk-form-horizontal" method="post" action="{$pageurl}">
 $form
-</div>
 </form>
 </div>
 
 END;
 
 /**
-* } ここまで フォーム画面HTML
+* } END of form HTML
 */
 
 
 
-// --[[ 第2ステップ : 完了表示＆メール送信 ]]-----------------------------------
+// --[[ SECOND STEP: Notice User Process & email submission ]]--
 } elseif ($action == 'finish') {
 /**
-* 完了画面HTML { ここから
+* Complete Display HTML { From here 
 */
-  // 遷移
+  // transition
   $seni = _fmMkSeni($seni_items, $action);
 
   $out_html = <<<END
 
-<div data-uk-button-checkbox>
+<div class="uk-hidden-small">
 $seni
 </div>
 <div>
-<p><strong>お問い合わせを受け付けました。</strong></p>
-<p>※お問い合わせ確認のメールを自動送信しました。<br />
-メールが届かない場合は、ご登録のメールアドレスが間違っている可能性があります。<br />
-その際は、お手数ですが再度お問い合わせください。</p>
+<p><strong>We've received your inquiry.</strong></p>
+<p>A confirmation e-mail has been sent to you.<br />
+If you do not receive it, please re-submit your inquiry with this form.</p>
 </div>
 
 END;
 /**
-* } ここまで 完了画面HTML
+* } COMPLETE MESSAGE HTML ends HERE
 */
 
 
 
-  # <br /> を改行コードに変換
+  # convert <br /> to LB
   foreach ($fld_list as $k => $v) { $fld_list[$k] = ereg_replace("<br />", LB, $fld_list[$k]); }
   $lang['sign_admin'] = ereg_replace("<br />", LB, $lang['sign_admin']);
   $lang['sign_user'] = ereg_replace("<br />", LB, $lang['sign_user']);
-  // 入力内容
+  // input content
   $input4mail=<<<END
 
-会社名: {$fld_list['q_organization']}
-お名前（漢字）: {$fld_list['q_name']}
-お名前（カタカナ）: {$fld_list['q_kana']}
-メールアドレス: {$fld_list['q_mail']}
-ご連絡方法: {$fld_list['q_answer_means']}
-TEL: {$fld_list['q_phone']}
-連絡先: {$fld_list['q_phone_kind']}
-希望日: {$fld_list['q_date1']}
-連絡ご希望時間帯: {$fld_list['q_access_time']}
-お申し込み内容: {$fld_list['q_order_1']} {$fld_list['q_order_2']} {$fld_list['q_order_3']}
-お問い合わせ内容: {$fld_list['q_other']}
+Organization: {$fld_list['q_organizaiton']}
+Name: {$fld_list['q_first_name']} {$fld_list['q_last_name']}
+Email: {$fld_list['q_mail']}
+Inquiry Method: {$fld_list['q_answer_means']}
+Phone: {$fld_list['q_phone']} ({$fld_list['q_phone_kind']})
+Inquiry Time: {$fld_list['q_access_time']}
+Apply: {$fld_list['q_order_1']} {$fld_list['q_order_2']} {$fld_list['q_order_3']}
+Comments: {$fld_list['q_other']}
 END;
 
 /**
-* 送信メール内容 - 管理者 { ここから
+* mail to admin  { from here
 */
   $out_mail_admin = <<<END
 
@@ -941,10 +925,10 @@ $input4mail
 {$lang['sign_admin']}
 END;
 /**
-* } ここまで 送信メール内容 - 管理者
+* } mail to admin  { from here
 */
 /**
-* 送信メール内容 - 入力者 { ここから
+* mail to sender { from here
 */
   $out_mail_user = <<<END
 
@@ -955,15 +939,15 @@ $input4mail
 {$lang['sign_user']}
 END;
 /**
-* } ここまで 送信メール内容 - 入力者
+* } end mail to sender
 */
 
 
-  # メール送信
+  # email Send 
   $ownererr = false;
   $ownersend = false;
   $om_array = explode(',', $owner_email);
-  $owner_mails = array_unique($om_array);  # 重複した値(メールアドレス)を削除
+  $owner_mails = array_unique($om_array);  # delete email double checked
   if (!empty($owner_email_item_name)) {
     $selmail;
     foreach ($owner_mails as $v) {
@@ -977,28 +961,29 @@ END;
   }
   $owner_subject = $lang['subject_admin'];
   foreach ($owner_mails as $v) {
-    $email1 = COM_mail( $v, "$owner_subject", $out_mail_admin, $email_from, false); # 管理者あてメール
-    if (!$email1) { $ownererr = true; } else { $ownersend = true; }  # 送信/エラーのフラグをセット
+    $email1 = COM_mail( $v, "$owner_subject", $out_mail_admin, $email_from, false); # mail to admin
+    if (!$email1) { $ownererr = true; } else { $ownersend = true; }  # set flag of transmit error
   }
-  # 管理者メール送信でエラーがあった場合
+  # if error at admin email transmission
   if ($ownererr) {
-    # 一部に送信できている場合
+    # if transmission succed for some of admins
     if ($ownersend) {
-      # エラーをログへ出力(一部へは配送されているのでユーザにエラー画面を出さない)
+      # logs error. no error display for user since some of admin
+      # received the email
       COM_errorLog($lang['ownertransmiterror'], 1);
       $email1 = true;
-    # 全員がエラーの場合
+    # if transmission failed to all admins
     } elseif (!$ownersend) {
-      # 処理エラーとし、ユーザへのメールは送らない
+      # makes it a process error. no email to user.
       $email1 = false;
     }
   }
   if ($email1) {
     $usr_subject = $lang['subject_user'];
-    $email2 = COM_mail( $fld_list[$email_input_name], "$usr_subject", $out_mail_user, $email_from, false); # 問合せ者へメール
+    $email2 = COM_mail( $fld_list[$email_input_name], "$usr_subject", $out_mail_user, $email_from, false); # email to user
   }
-  if ($email1 && $email2) { # どちらの送信も成功したら
-    # csv出力する
+  if ($email1 && $email2) { # Send Succeeded
+    # csv Output 
     if ($save_csv > 0) {
       $fldnames = _fmMkCsv($form_items);
       $delimiter = ',';
@@ -1036,17 +1021,17 @@ END;
       }
       $str = date($date_csv) . $delimiter . substr($str,0,-1);
       $str .= LB;
-	  if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); }
+      if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); }
       $fp = fopen($save_csv_file, 'a');
-      fwrite($fp, $str);  # CSV書き出し
+      fwrite($fp, $str);  # CSV output
       fclose($fp);
     }
     $retval = $out_html;
   } else {
-    $retval = $lang['transmiterror']; # メール送信が失敗したら
+    $retval = $lang['transmiterror']; # email Error
   }
 }
-// 「PHPを実行」の場合
+// execute Geeklog PHP
 echo $retval;
-// 「PHPを実行(return)」 の場合、上のechoをコメント(#)にして以下のreturnのコメントをはずしてください
+// if you use 'execute PHP(return)' with Geeklog 1.6 or later, Please comment (#)the above 'echo' and uncomment the blow 'return' to enable.
 # return $retval;
