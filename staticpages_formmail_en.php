@@ -897,9 +897,9 @@ END;
 
 
   # convert <br /> to LB
-  foreach ($fld_list as $k => $v) { $fld_list[$k] = ereg_replace("<br />", LB, $fld_list[$k]); }
-  $lang['sign_admin'] = ereg_replace("<br />", LB, $lang['sign_admin']);
-  $lang['sign_user'] = ereg_replace("<br />", LB, $lang['sign_user']);
+  foreach ($fld_list as $k => $v) { $fld_list[$k] = preg_replace("<br />", LB, $fld_list[$k]); }
+  $lang['sign_admin'] = preg_replace("<br />", LB, $lang['sign_admin']);
+  $lang['sign_user'] = preg_replace("<br />", LB, $lang['sign_user']);
   // input content
   $input4mail=<<<END
 
