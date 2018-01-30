@@ -1,7 +1,13 @@
+このformmailは、以下のリポジトリを元に、UIkit v3対応、HTML5の機能を追加しています。
+https://github.com/hirorongl/formmail2
+                             Authors: Tetsuko Komma - ivysoho AT gmail DOT com
+
+
+
+
 静的ページPHPでフォームメールページを作成                        Version: 2.1.12
                                                               Create: 2017/09/20
                              Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
-
 
 
 静的ページPHPで汎用フォームメール(お問合せ)を設置するものです。
