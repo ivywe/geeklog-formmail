@@ -1,7 +1,6 @@
-Staticpages.PHP Formmail Version: 2.1.11
-                                                              Create: 2016/02/15
-                           Authors:   Hiroshi Sakuramoto - hiro AT winkey DOT jp
-                                    Tetsuko Komma - komma AT ivywe DOT co DOT jp
+静的ページPHPでフォームメールページを作成                        Version: 2.1.12
+                                                              Create: 2017/09/20
+                             Authors: Hiroshi Sakuramoto - hiro AT winkey DOT jp
 
 
 
@@ -42,14 +41,37 @@ Staticpages.PHP Formmail Version: 2.1.11
  PHP「PHPを実行する」
 
 
+【インストール - CSS用画像アップロード】
+
+ 1. FTPソフトにて images を 公開領域の images へアップロードします。
+
+
 【インストール - CSS追加】
 
-テーマから読み込まれていない場合は、使用テーマの最後に読み込まれるcssの末尾へ追加します。
+※テーマにより追加するcssが違う場合があります。
+ professionalテーマ は public_html/layout/professional/style.css
+ professional_cssテーマ は public_html/layout/professional_css/custom.css
+ modern_curveテーマ は public_html/layout/modern_curve/css/custom.css
+ (※基本は使用テーマの最後に読み込まれるcssの末尾へ追加)
 
- add_to_custom.css -> custom.css or style.css (末尾へ追加)
+※お使いのGeeklogが2.0以上の場合
+
+ add_to_gl20x_custom.css -> custom.css or style.css (末尾へ追加)
 
 
-【インストール - Geeklog2.1未満の場合は本体を少しハック】
+※お使いのGeeklogが1.8の場合
+
+ add_to_gl18x_custom.css -> custom.css or style.css (末尾へ追加)
+
+
+【インストール - JavaScript追加 - Geeklog1.8のみ】
+
+※お使いのGeeklogが1.8の場合のみヘルプ表示用のJavaScriptをアップロードする必要があります。
+
+ add_to_gl18x_formmail.js --FTP Upload--> public_html/javascript/formmail.js
+
+
+【インストール - Geeklog2.1以下の場合は本体を少しハック】
 CSRF対策にユニークなIDとしてtokenを利用しますがGeeklogのライブラリのtoken周りにバグがあるため以下のハックを適用します。
 
 
@@ -107,8 +129,8 @@ Geeklog2.0.0 : 1423行目付近
 
 【インストール - 確認】
 
- 1. ブラウザで作成した静的ページPHPにアクセスして完了です。
-「http://あなたのサイト/staticpages/index.php?page=静的ページID」
+ 1. ブラウザで以下のURLにアクセスして完了です。
+「http://あなたのサイト/staticpages/index.php?page=formmail」
  ※CSSや画像がキャッシュが利用され更新された内容でない場合がありますので、
  ※ブラウザの再表示を押してみてください。
 
@@ -171,7 +193,7 @@ maxlengthを項目設定の中に追加します。
           'name' => 'q_name_1',
           'size' => '40',
           'maxlength' => '40',    <--ここ
-          'class' => 'ime_on',
+          'class' => 'bginput ime_on',
           'value' => $username
     ),
 ========================================
@@ -187,7 +209,7 @@ class指定の中に"ime_on"を指定すると全角モードになり、"ime_of
           'name' => 'q_name_1',
           'size' => '40',
           'maxlength' => '40',
-          'class' => 'ime_on',  <--ここのime_onで全角モードになる
+          'class' => 'bginput ime_on',  <--ここのime_onで全角モードになる
           'value' => $username
     ),
 ========================================
@@ -222,7 +244,7 @@ valid_captcha => '必須用文字列'  : CAPTCHA専用チェック
 ========================================
             array('type' => 'textarea',
                   'name' => 'q_other',
-                  'class' => 'ime_on',
+                  'class' => 'bginput ime_on',
                   'style' => 'width: 95%; height: 100px;',
                   'onKeyup' => "var n=200-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';"  <--ここで残り入力可能文字数を表示。200が最大文字数。tasp1が表示するSPANのid。
             ),
@@ -245,19 +267,57 @@ valid_captcha => '必須用文字列'  : CAPTCHA専用チェック
 
 
 
++-----------------------------------------------------------------------------+
+| 日付項目でのカレンダー表示
++-----------------------------------------------------------------------------+
+
+【日付入力でカレンダーを表示して選択】
+JavaScript + CSS にてカレンダーを表示して日付を選択できるようにします。
+
+その１）デフォルト設定
+
+カレンダー表示用のJavaScriptを以下のように設定します。
+
+以下の宣言の中にq_date1という部分があり、これは「その２）利用例」のnameと一致しています。変更する場合は両方を変更してください。
+========================================
+# カレンダー表示 jqueryui datepicker http://jqueryui.com/datepicker/
+#   ※使わない場合はJSLIB;までコメントアウトしてください。
+$jslib_datepicker = <<<JSLIB
+$(function() { $.datepicker.setDefaults( $.datepicker.regional['ja'] ); $("#q_date1").datepicker({ dateFormat: '$date_js_cal', dayNamesMin: ['日','月','火','水','木','金','土'], monthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], showMonthAfterYear: true }); });
+JSLIB;
+========================================
+
+
+その２）利用例
+カレンダーを利用するようidのq_date1という部分は「その１）デフォルト設定」の「JavaScriptライブラリ等の宣言」の中にあるq_date1と一致しています。変更する場合は両方を変更してください。
+========================================
+//<tr>１行
+array('header'=>'希望日',
+  'data'=>array(
+array( 'type'=>'text', 'name'=>'q_date1', 'id'=>'q_date1', 'size'=>'20', 'maxlength'=>'10', 'class'=>'bginput ime_off' ),
+  ),
+),
+//</tr>１行
+========================================
+
+
+
+
+
 【更新履歴】
-2015/05/28  2.1.10
+2017/09/20  2.1.12
+ * Refererチェックでエラー時にFORMが表示される不具合を修正
+2017/09/14  2.1.11
+ * 独自のhidden項目でのエラーを修正
+ * CSVの出力をメール送信前に移動
+ * CSVにIPを記録
+ * メール送信エラー時にCSVにもエラーを記録
+2015/05/26  2.1.10
+ * UIkit対応 (thanks ivy)
+ * Bootstrap対応 (thanks ivy)
  * 不要なnot_csv属性を書き出さないよう対応
  * インデントを空白2マスに修正
-2015/05/13  2.1.9 Bootstrap
- * Bootstrap 版を追加
-2015/05/10  2.1.9 UIkit
- * tooltipによるヘルプ表示をUIkitのtooltipに変更
- * table 組を削除してdlに変更
- * UIkitのJSを日本語化サンプルとして追加:
-   layout/theme/vendor/uikit/js/components/datepicker.js
- * 英語版を追加しました。
-2015/05/04  2.1.9
+2015/05/04  2.1.9beta
  * pageidを自動的に取得
  * CAPTCHAに対応
 2014/01/27  2.1.8

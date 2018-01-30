@@ -1,35 +1,32 @@
-// +---------------------------------------------------------------------------+
+// +------------------------------------------------------------------+
 // | FormMail Static Page for Geeklog 2.1 higher for UIkit
-// +---------------------------------------------------------------------------+
+// +------------------------------------------------------------------+
 // | Copyright (C) 2008-2017 by the following authors:
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
 // | Authors    : Tetsuko Komma - komma AT ivywe DOT co DOT jp
-// | Version: 2.1.11改
+// | Version: 2.1.12
 // | staticpages_formmail_UIkitv3_2_ja.php
-// +---------------------------------------------------------------------------+
+// +------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
 global $_fmtokenttl; // FormMail変数
 if (!defined('XHTML')) define('XHTML', ' /');
 
-// --[[ 初期設定 ]]------------------------------------------------------------
+// --[[ 初期設定 ]]---------------------------------------------------
 # 問合せを管理者へ通知の設定
 #    複数のE-mailはカンマ(,)で区切りで指定する(スペース等はあけない)
 #      例) 'info@hoge.com,admin@page.com'
 #    特定の入力項目に応じて送り先を変える
 #    ※この方法を利用する時は必ず $owner_email_item_name を指定してください。
 #      例) 'AAA=info@hoge.com,BBB=admin@page.com'
-
 $owner_email=$_CONF['site_mail'];
 
 # 管理者Emailを入力項目から選択する項目名
 #   (selectなどの選択でメールの送り先を変えるのに利用)
 //  ※送り先を変える指定をしたら先頭の#を削除してください。(コメントをはずします)
-$owner_email_item_name = 'q_products_name';
+#$owner_email_item_name = 'q_mail_to';
 
 # メール送信者E-mail
 $email_from = $_CONF['site_mail'];
-
-
 #Geeklog1.5から，noreplyを指定できます。
 #$email_from = $_CONF['noreply_mail'];
 
@@ -104,7 +101,7 @@ $required_string = '<span class="uk-text-warning">*</span>';
 
 # ==画像認証関係==
 #   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
-$msg_spformmail_notinstall_captcha = '';
+$msg_spformmail_notinstall_captcha = 'CAPTCHAプラグインがインストールされていません。';
 
 #   送信時に画像認証でエラーの場合のエラーメッセージ
 #     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
@@ -150,6 +147,7 @@ $lang = array(
 );
 
 
+
 #####
 # フォーム項目の設定
 #####
@@ -158,20 +156,20 @@ $form_items = array(
 array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
 array('header'=>'法人様名',
-  'valid_notkanahan'=>'q_organization', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
+  'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'法人様名を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'uk-input ime_on', 'placeholder'=>'例）法人様名' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'uk-input ime_on', 'placeholder'=>'例）○○○株式会社' ),
   ),
 ),
 // } 1行
 // 1行 {
-array('header'=>'お名前（全角）',
+array('header'=>'お名前（漢字）',
   'valid_require'=>$required_string, 'error_require'=>'お名前（漢字）が入力されていません',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-input ime_on', 'value'=>$username, 'placeholder'=>'例）山田花子' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'required'=>'', 'value'=>$username, 'placeholder'=>'例）山田花子' ),
   ),
 ),
 // } 1行
@@ -181,7 +179,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前（カタカナ）を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-input ime_on', 'placeholder'=>'例）ヤマダハナコ' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'required'=>'', 'placeholder'=>'例）ヤマダハナコ' ),
   ),
 ),
 // } 1行
@@ -193,9 +191,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-input uk-margin-small-bottom ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'required'=>'', 'class'=>'uk-input uk-margin-small-bottom ime_off', 'value'=>$user_email ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'required'=>'', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
   ),
 ),
 // } 1行
@@ -217,11 +215,12 @@ array('header'=>'電話番号',
   'valid_require'=>$required_string, 'error_require'=>'電話番号が入力されていません',
   'valid_phone'=>'q_phone', 'error_phone'=>'電話番号を正しく入力してください。数字と+(プラス)と-(ハイフン)と (半角スペース)が使えます',
   'valid_minlen'=>'q_phone=6', 'error_minlen'=>'電話番号の文字数は6文字以上で入力してください',
-  'valid_maxlen'=>'q_phone=17', 'error_maxlen'=>'電話番号の文字数は17文字以内で入力してください',
+  'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'help'=>'半角数字と＋（プラス）と－（ハイフン）と半角スペースで電話番号を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'17', 'aria-required'=>'true', 'required'=>'', 'class'=>'uk-input uk-form-width-medium ime_off', 'placeholder'=>'例）03-1234-1234'  ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'required'=>'', 'class'=>'uk-input uk-form-width-medium ime_off', 'placeholder'=>'例）03-1234-1234'  ),
 array( 'string'=>'<br'.XHTML.'>' ),
+array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
 array( 'input'=>'自宅 &nbsp; ' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'勤務先' ),
@@ -243,7 +242,7 @@ array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{
 array('header' => '時間帯',
   'help'=>'ご連絡時間帯を選んでください。',
   'data'=>array(
-array( 'type'=>'select', 'name'=>'q_access_time', 'options'=>array('selected' => '選んでください', 'values' => '選んでください,特に希望なし,午前,午後,夕方以降'), 'class'=>'uk-select uk-form-width-small'  ),
+array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降'), 'class'=>'uk-select uk-form-width-small' ),
 array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望する時間帯。' ),
   ),
 ),
@@ -251,26 +250,26 @@ array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望す�
 ),),
 // } 1グループ
 // 1グループ {
-array('title'=>'お問い合わせ内容', 'table'=>array(
+array('title'=>'申し込み内容', 'table'=>array(
 // 1行 {
-array('header'=>'お問い合わせ',
-  'help'=>'お問い合わせの種類を選んでください。',
+array('header'=>'お申し込みセミナー',
+  'help'=>'セミナーを選んでください。',
   'data'=>array(
-array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'お問い合わせ１' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'お問い合わせ２' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'セミナー２' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'お問い合わせ３' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
   ),
 ),
 // } 1行
 // 1行 {
 array('header'=>'お問い合わせ内容',
-  'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。',
-  'valid_maxlen'=>'q_other=1000', 'error_maxlen'=>'お問い合わせ内容の文字数は1000文字以内で入力してください',
-  'help'=>'1000文字以内でお問い合わせを入力してください。',
+  'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
+  'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
+  'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=1000-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。' ),
 array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
@@ -278,10 +277,10 @@ array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br
 ),),
 // } 1グループ
 // 1グループ 画像認証 {
-array('title_captcha' => '', 'table_captcha' => array(
+array('title_captcha' => '画像認証', 'table_captcha' => array(
 // 1行 画像認証 {
-array('header_captcha' => '',
-  'valid_captcha' => '',
+array('header_captcha' => '画像認証',
+  'valid_captcha' => $required_string,
   'error_captcha' => $msg_spformmail_valid_captcha,
   'error_notcaptcha' => $msg_spformmail_notinstall_captcha,
   'data' => array()
@@ -313,11 +312,7 @@ array( 'string'=>'</div>' ),
 
 
 
-
-
-
-
-// --[[ 関数群 ]]---------------------------------------------------------------
+// --[[ 関数群 ]]-----------------------------------------------------
 if(!function_exists('_fmGetAction')){
 function _fmGetAction ($err) {
   $buf = '';
@@ -340,7 +335,6 @@ function _fmMkSeni ($items, $action) {
   $buf .= '</div>'.LB;
   return $buf;
 }
-
 
 function _fmPutiFilter($s) {
   $se = array('%','(',')',chr(92),chr(13).chr(10),chr(13),chr(10));
@@ -558,9 +552,8 @@ END;
 function _fmMkTitle ($title) {
   return <<<END
 
-  <h3>$title</h3>
-  <div>
-
+  <h3 class="uk-h3">$title</h3>
+  <dl class="uk-description-list-horizontal">
 END;
 }
 
@@ -596,7 +589,7 @@ function _fmMkForm_Input ($attributes, $addclass, $hidden = false) {
     if ($key != 'not_confirm') { $buf .= ' '.$key.'="'.$value.'"'; }
   }
   $buf .= XHTML.'>';
-  if ( $hidden || $attributes['type'] == 'checkbox') {
+  if ($hidden || $attributes['type'] == 'checkbox') {
     if ( !isset($attributes['not_confirm']) || ! $attributes['not_confirm'] ) { $buf .= ' ' . $attributes['value']; }
   }
   return $buf;
@@ -654,7 +647,7 @@ function _fmMkForm_Item ($items, $action, $addclass) {
     switch ($items['type']) {
       case 'text': $buf .= _fmMkForm_Input($items, $addclass); break;
       case 'password': $buf .= _fmMkForm_Input($items, $addclass); break;
-      case 'hidden': $buf .= _fmMkForm_Input($items,''); break;
+      case 'hidden': $buf .= _fmMkForm_Input($items, $addclass, true); break;
       case 'radio': $buf .= _fmMkForm_Input($items, $addclass); break;
       case 'checkbox': $buf .= _fmMkForm_Input($items, $addclass); break;
       case 'select': $buf .= _fmMkForm_Select($items, $addclass); break;
@@ -760,7 +753,7 @@ function _fmMkForm ($items, $action) {
       }
       $buf .= <<<END
 
-	</div> <!-- gl-form-block -->
+    </dl>
 END;
     } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
@@ -773,7 +766,7 @@ END;
         }
         $buf .= <<<END
 
-	</div> <!-- gl-form-block -->
+    </dl>
 END;
       }
     } elseif (!empty($item['action'])) {         //送信ボタン
@@ -814,11 +807,8 @@ function _fmChkReferer ($pu,$err) {
     if (strpos($_SERVER['HTTP_REFERER'],$pu)===FALSE) {
       $msg = $err;
     }
-// whitelist url: www.example.com
   } elseif (strpos($_SERVER['HTTP_REFERER'],$_CONF['site_url'])===FALSE) {
-    if (strpos($_SERVER['HTTP_REFERER'],'://www.example.com')===FALSE) {
-      $msg = $err;
-    }
+    $msg = $err;
   }
   return $msg;
 }
@@ -826,29 +816,28 @@ function _fmChkReferer ($pu,$err) {
 
 
 
-// --[[ 初期処理 ]]------------------------------------------------------------
+// --[[ 初期処理 ]]---------------------------------------------------
 # POSTデータを直接変換 (全角から半角へ、カタカナ半角からカタカナ全角へ)
 if (!empty($zentohan_itemname)) { foreach (explode(',',$zentohan_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'askh'); } }
 if (!empty($kana_hantozen_itemname)) { foreach (explode(',',$kana_hantozen_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'K'); } }
 if (!empty($kana_hiratokana_itemname)) { foreach (explode(',',$kana_hiratokana_itemname) as $k) { if (!empty($_POST[$k])) $_POST[$k] = mb_convert_kana($_POST[$k], 'C'); } }
 # データを保存用に加工
 foreach ($_POST as $k => $v) {
-    $fld_list[$k] = preg_replace('/,/', '，', $_POST[$k]);
-    $fld_list[$k] = preg_replace('/"/', '”', $fld_list[$k]);
-    $fld_list[$k] = preg_replace("/'/", "’", $fld_list[$k]);
-    $fld_list[$k] = preg_replace('/`/', '‘', $fld_list[$k]);
-    $fld_list[$k] = preg_replace('/;/', '；', $fld_list[$k]);
-    $fld_list[$k] = preg_replace(preg_quote('#'.chr(92).'#'), '￥', $fld_list[$k]);
-    $fld_list[$k] = COM_applyFilter($fld_list[$k]);
+  #以下の記号は大文字にして保存
+  $fld_list[$k] = preg_replace('/,/', '，', $_POST[$k]);
+  $fld_list[$k] = preg_replace('/"/', '”', $fld_list[$k]);
+  $fld_list[$k] = preg_replace("/'/", "’", $fld_list[$k]);
+  $fld_list[$k] = preg_replace('/`/', '‘', $fld_list[$k]);
+  $fld_list[$k] = preg_replace('/;/', '；', $fld_list[$k]);
+  $fld_list[$k] = preg_replace(preg_quote('#'.chr(92).'#'), '￥', $fld_list[$k]);
+  $fld_list[$k] = COM_applyFilter($fld_list[$k]);
 }
 # CSVファイルのフルパス
 $save_csv_file = $save_csv_path . $save_csv_name;
 # idからurlを作成
-if (!empty($page)) { $pageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$page); $pageurl .= (!empty($_fm_pid) && $_fm_pid != 'none') ? '?pid='.$_fm_pid : ''; }
-if (empty($_fmhelppageurl) && !empty($helppageid)) { $_fmhelppageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$helppageid); }
-
+if (!empty($page)) { $pageurl = COM_buildUrl($_CONF['site_url'].'/staticpages/index.php?page='.$page); }
 # CSRF
-if (!empty($_POST) && !SECINT_checkToken()) { $m=isset($_POST[$email_input_name]) ? 'email='.$_POST[$email_input_name].' ' : ''; COM_accessLog("tried {$m}to staticpage({$page}) failed CSRF checks."); header('Location: '.$pageurl); exit; }
+if (!empty($_POST) && !SECINT_checkToken()) { $m=isset($_POST[$email_input_name]) ? 'email='.$_POST[$email_input_name].' ' : ''; COM_accessLog("tried {$m}to staticpage({$pageid}) failed CSRF checks."); header('Location: '.$pageurl); exit; }
 
 
 // Refererチェック
@@ -866,7 +855,7 @@ $action = _fmGetAction($valid);
 
 
 
-// --[[ 第1ステップ : フォーム表示(入力＆確認) ]]-------------------------------
+// --[[ 第1ステップ : フォーム表示(入力＆確認) ]]---------------------
 if ($action == 'input' || $action == 'confirm') {
 /**
 * フォーム画面HTML { ここから
@@ -875,12 +864,9 @@ if ($action == 'input' || $action == 'confirm') {
   $seni = _fmMkSeni($seni_items, $action);
   // 入力フォーム
   $form = _fmMkForm($form_items, $action);
-  if ($_spflg_ref_err) {
-    $form='';
-    COM_accessLog("REFERER Error in staticpage({$page}) - Referring: {$_SERVER['HTTP_REFERER']}");
-  }
+  if ($_spflg_ref_err) { $form=''; COM_accessLog("REFERER Error in staticpage({$page}) - Referring: {$_SERVER['HTTP_REFERER']}"); }
 
-  $retval .= <<<END
+  $retval = <<<END
 
 <div class="gl-form">
 $seni
@@ -900,7 +886,7 @@ END;
 
 
 
-// --[[ 第2ステップ : 完了表示＆メール送信 ]]-----------------------------------
+// --[[ 第2ステップ : 完了表示＆メール送信 ]]-------------------------
 } elseif ($action == 'finish') {
 /**
 * 完了画面HTML { ここから
@@ -908,9 +894,9 @@ END;
   // 遷移
   $seni = _fmMkSeni($seni_items, $action);
 
-  $out_html .= <<<END
+  $out_html = <<<END
 
-<div class="uk-hidden-small">
+<div data-uk-button-checkbox>
 $seni
 </div>
 <div>
@@ -921,9 +907,6 @@ $seni
 </div>
 
 END;
-
-
-
 /**
 * } ここまで 完了画面HTML
 */
@@ -931,21 +914,24 @@ END;
 
 
   # <br /> を改行コードに変換
-  foreach ($fld_list as $k => $v) { $fld_list[$k] = preg_replace("<br />", LB, $fld_list[$k]); }
-  $lang['sign_admin'] = preg_replace("<br />", LB, $lang['sign_admin']);
-  $lang['sign_user'] = preg_replace("<br />", LB, $lang['sign_user']);
+  $pat = '/<br[[:space:]]*'.chr(92).'/?[[:space:]]*>/i';
+  foreach ($fld_list as $k => $v) { $fld_list[$k] = preg_replace($pat, LB, $fld_list[$k]); }
+  $lang['sign_admin'] = preg_replace($pat, LB, $lang['sign_admin']);
+  $lang['sign_user'] = preg_replace($pat, LB, $lang['sign_user']);
   // 入力内容
   $input4mail=<<<END
 
-組織名    : {$fld_list['q_organizaiton']}
-お名前    : {$fld_list['q_first_name']} {$fld_list['q_last_name']}
-Email     : {$fld_list['q_mail']}
+会社名: {$fld_list['q_organization']}
+お名前（漢字）: {$fld_list['q_name']}
+お名前（カタカナ）: {$fld_list['q_kana']}
+メールアドレス: {$fld_list['q_mail']}
 ご連絡方法: {$fld_list['q_answer_means']}
-TEL       : {$fld_list['q_phone']} ({$fld_list['q_phone_kind']})
-時間帯    : {$fld_list['q_access_time']}
-種類      : {$fld_list['q_order_1']} {$fld_list['q_order_2']} {$fld_list['q_order_3']}
-メッセージ: {$fld_list['q_other']}
-
+TEL: {$fld_list['q_phone']}
+連絡先: {$fld_list['q_phone_kind']}
+希望日: {$fld_list['q_date1']}
+連絡ご希望時間帯: {$fld_list['q_access_time']}
+お申し込み内容: {$fld_list['q_order_1']} {$fld_list['q_order_2']} {$fld_list['q_order_3']}
+お問い合わせ内容: {$fld_list['q_other']}
 END;
 
 /**
@@ -977,7 +963,8 @@ END;
 * } ここまで 送信メール内容 - 入力者
 */
 
-  # csv出力する
+  # メール送信前にcsvを出力
+  # ->送信エラーでもCSVで確認できるように対応
   if ($save_csv > 0) {
     $fldnames = _fmMkCsv($form_items);
     $delimiter = ',';
@@ -1013,9 +1000,9 @@ END;
         $str .= $v.$delimiter;
       }
     }
-    $str = date($date_csv) . $delimiter . substr($str,0,-1);
+    $str = date($date_csv) . $delimiter . $_SERVER['REMOTE_ADDR'] . $delimiter . substr($str,0,-1);
     $str .= LB;
-    if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang,"auto"); }
+    if( !empty( $save_csv_lang ) ) { $str = mb_convert_encoding($str, $save_csv_lang); }
     $fp = fopen($save_csv_file, 'a');
     fwrite($fp, $str);  # CSV書き出し
     fclose($fp);
