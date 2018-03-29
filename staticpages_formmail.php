@@ -150,11 +150,11 @@ $form_items = array(
 // 1グループ {
 array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
-array('header'=>'法人様名',
+array('header'=>'法人様名（全角）',
   'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'法人様名を入力してください。',
+  'help'=>'法人様名を全角で入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'uk-input ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'uk-input ime_on', 'placeholder'=>'例）○○○株式会社' ),
   ),
 ),
 // } 1行
@@ -164,7 +164,7 @@ array('header'=>'お名前（漢字）',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'value'=>$username, 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'value'=>$username, 'placeholder'=>'例）山田花子', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -174,7 +174,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前（カタカナ）を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'placeholder'=>'全角で入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'placeholder'=>'例）ヤマダハナコ', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -186,9 +186,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off uk-margin-small-bottom', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off uk-margin-small-bottom', 'value'=>$user_email, 'required'=>'' ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -213,7 +213,7 @@ array('header'=>'電話番号',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'help'=>'半角数字と＋（プラス）と－（ハイフン）と半角スペースで電話番号を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'uk-input ime_off uk-form-width-medium', 'placeholder'=>'例) 03-1111-2222' ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'uk-input ime_off uk-form-width-medium', 'placeholder'=>'例) 03-1111-2222', 'required'=>'' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
 array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'class'=>'uk-radio', 'checked'=>'checked' ),
@@ -260,11 +260,11 @@ array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３', 'cla
 // } 1行
 // 1行 {
 array('header'=>'お問い合わせ内容',
-  'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
+  'valid_require'=>$required_string, 'error_require'=>'お問い合わせ内容が入力されていません', 'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
   'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
   'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。', 'required'=>'' ),
 array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
@@ -546,8 +546,7 @@ END;
 function _fmMkTitle ($title) {
   return <<<END
 
-<fieldset class="uk-fieldset">
-  <lagend class="uk-legend">$title</legend>
+  <h3 class="uk-h3">$title</h3>
 
 END;
 }
@@ -712,7 +711,6 @@ function _fmMkTable ($tables, $action) {
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
     if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
-    if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span uk-tooltip="'.$lines['help'].'">?</span>)'; }
     $buf .= '</label>'.LB;
     $buf .= '    <div class="uk-form-controls">'.LB;
     if (isset($lines['data'])) {
@@ -722,6 +720,9 @@ function _fmMkTable ($tables, $action) {
         $buf .= _fmMkTable_Data($lines['data'], $action, $formclass);
       }
     }
+
+    if (isset($lines['help']) && $action == 'input') { $buf .= ' <div class="uk-text-warning uk-text-small"> '.$lines['help'].'</div>'; }
+
     $buf .= LB.'    </div>'.LB;
     $buf .= '  </div>'.LB;
   }
@@ -742,7 +743,7 @@ function _fmMkForm ($items, $action) {
           case 'table': $buf .= _fmMkTable($value, $action); break;
         }
       }
-      $buf .= "</fieldset>".LB;
+      $buf .= "".LB;
 
     } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
@@ -753,7 +754,7 @@ function _fmMkForm ($items, $action) {
             case 'table_captcha': $buf .= _fmMkTable($value, $action); break;
           }
         }
-        $buf .= "</fieldset>".LB;
+        $buf .= "".LB;
       }
     } elseif (!empty($item['action'])) {         //送信ボタン
       if ($item['action'] == $action) {
@@ -857,7 +858,7 @@ if ($action == 'input' || $action == 'confirm') {
 $seni
 <div id="$page" class="uk-margin-left uk-margin-right">
 $valid
-<form name="subForm" class="uk-form-stacked" method="post" action="{$pageurl}">
+<form name="subForm" class="uk-form-horizontal uk-margin-large" method="post" action="{$pageurl}">
 $form
 </form>
 </div>

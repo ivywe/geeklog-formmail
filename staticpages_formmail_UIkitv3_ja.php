@@ -1,10 +1,10 @@
 // +------------------------------------------------------------------+
 // | FormMail Static Page for Geeklog 2.1 higher for UIkit
 // +------------------------------------------------------------------+
-// | Copyright (C) 2008-2017 by the following authors:
+// | Copyright (C) 2008-2018 by the following authors:
 // | Authors    : Hiroshi Sakuramoto - hiro AT winkey DOT jp
-// | Authors    : Tetsuko Komma - komma AT ivywe DOT co DOT jp
-// | Version: 2.1.12
+// | Version: 2.1.13
+// |  front-end framewaork for UIKit: 3.0
 // | staticpages_formmail_UIkitv3_2_ja.php
 // +------------------------------------------------------------------+
 global $_CONF,$_USER,$_PLUGINS,$_SCRIPTS,$page; // Geeklog変数
@@ -100,17 +100,13 @@ $seni_items = array('input' => '情報入力', 'confirm' => '入力項目確認'
 $required_string = '<span class="uk-text-warning">*</span>';
 
 # ==画像認証関係==
-#   画像認証(CAPTCHA)がインストールされていない場合のエラーメッセージ
-$msg_spformmail_notinstall_captcha = 'CAPTCHAプラグインがインストールされていません。';
+#   画像認証(reCAPTCHA)がインストールされていない場合のエラーメッセージ
+$msg_spformmail_notinstall_captcha = 'reCAPTCHAプラグインがインストールされていません。';
 
 #   送信時に画像認証でエラーの場合のエラーメッセージ
-#     ※空文字にするとCAPTCHAプラグインが作成するエラーメッセージを使います。
+#     ※空文字にするとreCAPTCHAプラグインが作成するエラーメッセージを使います。
 #     ※空文字意外にするとそれを無視して固定メッセージにできます。
-$msg_spformmail_valid_captcha = '';
-
-#   ※ CAPTCHAのテンプレート
-#   private/plugins/captcha/templates/captcha_contact.thtml
-#
+$msg_spformmail_valid_captcha = '画像認証を行ってください。';
 
 # ==日付関係==
 #   JavaScriptカレンダーでの日付表記
@@ -155,9 +151,9 @@ $form_items = array(
 // 1グループ {
 array('title'=>'お客様情報', 'table'=>array(
 // 1行 {
-array('header'=>'法人様名',
+array('header'=>'法人様名（全角）',
   'valid_notkanahan'=>'q_kaisha', 'error_notkanahan'=>'法人様名に半角カタカナがあります。すべて全角で入力してください',
-  'help'=>'法人様名を入力してください。',
+  'help'=>'法人様名を全角で入力してください。',
   'data'=>array(
 array( 'type'=>'text', 'name'=>'q_organization', 'size'=>'40', 'maxlength'=>'60', 'class'=>'uk-input ime_on', 'placeholder'=>'例）○○○株式会社' ),
   ),
@@ -169,7 +165,7 @@ array('header'=>'お名前（漢字）',
   'valid_notkanahan'=>'q_name', 'error_notkanahan'=>'お名前（漢字）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角で名前を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'required'=>'', 'value'=>$username, 'placeholder'=>'例）山田花子' ),
+array( 'type'=>'text', 'name'=>'q_name', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'value'=>$username, 'placeholder'=>'例）山田花子', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -179,7 +175,7 @@ array('header'=>'お名前（カタカナ）',
   'valid_notkanahan'=>'q_kana', 'error_notkanahan'=>'お名前（カタカナ）に半角カタカナがあります。すべて全角で入力してください',
   'help'=>'全角カタカナでお名前（カタカナ）を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'required'=>'', 'placeholder'=>'例）ヤマダハナコ' ),
+array( 'type'=>'text', 'name'=>'q_kana', 'size'=>'40', 'maxlength'=>'40', 'class'=>'uk-input ime_on', 'placeholder'=>'例）ヤマダハナコ', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -191,9 +187,9 @@ array('header'=>'メールアドレス',
   'valid_hankaku'=>'q_mail,q_mail_re', 'error_hankaku'=>'メールアドレスはすべて半角で入力してください',
   'help'=>'半角でメールアドレスを入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'required'=>'', 'class'=>'uk-input uk-margin-small-bottom ime_off', 'value'=>$user_email ),
+array( 'type'=>'text', 'name'=>'q_mail', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off uk-margin-small-bottom', 'value'=>$user_email, 'required'=>'' ),
 array( 'input'=>'<br'.XHTML.'>' ),
-array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'required'=>'', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。' ),
+array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'class'=>'uk-input ime_off', 'not_confirm'=>'true', 'not_csv'=>'true', 'value'=>$user_email, 'placeholder'=>'確認たのめ、もう一度入力してください。', 'required'=>'' ),
   ),
 ),
 // } 1行
@@ -201,10 +197,10 @@ array( 'type'=>'text', 'name'=>'q_mail_re', 'size'=>'40', 'maxlength'=>'240', 'r
 array('header'=>'ご連絡方法',
   'help'=>'ご連絡方法を選んでください。',
   'data'=>array(
-array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'メール', 'checked'=>'checked' ),
-array( 'input'=>'メール ' ),
-array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'電話' ),
-array( 'input'=>'電話 ' ),
+array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'メール', 'class'=>'uk-radio', 'checked'=>'checked' ),
+array( 'input'=>' メール' ),
+array( 'type'=>'radio', 'name'=>'q_answer_means', 'value'=>'電話', 'class'=>'uk-radio' ),
+array( 'input'=>' 電話' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※お問い合わせ内容によって、メールをご希望の場合も電話連絡とさせて頂く場合があります。' ),
   ),
@@ -218,15 +214,15 @@ array('header'=>'電話番号',
   'valid_maxlen'=>'q_phone=13', 'error_maxlen'=>'電話番号の文字数は13文字以内で入力してください',
   'help'=>'半角数字と＋（プラス）と－（ハイフン）と半角スペースで電話番号を入力してください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'required'=>'', 'class'=>'uk-input uk-form-width-medium ime_off', 'placeholder'=>'例）03-1234-1234'  ),
+array( 'type'=>'text', 'name'=>'q_phone', 'size'=>'20', 'maxlength'=>'13', 'class'=>'uk-input ime_off uk-form-width-medium', 'placeholder'=>'例) 03-1111-2222', 'required'=>'' ),
 array( 'string'=>'<br'.XHTML.'>' ),
 array( 'input'=>'※半角（例&nbsp;0311112222）<br'.XHTML.'>' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'checked'=>'checked' ),
-array( 'input'=>'自宅 &nbsp; ' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'勤務先' ),
-array( 'input'=>'勤務先 &nbsp; ' ),
-array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'携帯' ),
-array( 'input'=>'携帯' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'自宅', 'class'=>'uk-radio', 'checked'=>'checked' ),
+array( 'input'=>' 自宅' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'勤務先', 'class'=>'uk-radio' ),
+array( 'input'=>' 勤務先' ),
+array( 'type'=>'radio', 'name'=>'q_phone_kind', 'value'=>'携帯', 'class'=>'uk-radio' ),
+array( 'input'=>' 携帯' ),
   ),
 ),
 // } 1行
@@ -234,7 +230,7 @@ array( 'input'=>'携帯' ),
 array('header'=>'希望日',
   'help'=>'ご連絡希望日を選んでください。',
   'data'=>array(
-array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}", 'class'=>'uk-input uk-form-width-small', 'placeholder'=>'YYYY/MM/DD'  ),
+array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{format:'YYYY.MM.DD'}", 'class'=>'uk-input uk-form-width-small', 'placeholder'=>'YYYY/MM/DD' ),
   ),
 ),
 // } 1行
@@ -242,7 +238,7 @@ array( 'type'=>'text', 'name'=>'q_date1', 'size'=>'20', 'data-uk-datepicker'=>"{
 array('header' => '時間帯',
   'help'=>'ご連絡時間帯を選んでください。',
   'data'=>array(
-array( 'type'=>'select', 'name'=>'q_access_time', 'style'=>'width: 15em;', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降'), 'class'=>'uk-select uk-form-width-small' ),
+array( 'type'=>'select', 'name'=>'q_access_time', 'options'=>array('selected' => '特に希望なし', 'values' => '特に希望なし,午前,午後   - 夕方まで,夕方以降'), 'class'=>'uk-select uk-form-width-small' ),
 array( 'input'=>'<br'.XHTML.'>※電話連絡の場合のご連絡を希望する時間帯。' ),
   ),
 ),
@@ -255,21 +251,21 @@ array('title'=>'申し込み内容', 'table'=>array(
 array('header'=>'お申し込みセミナー',
   'help'=>'セミナーを選んでください。',
   'data'=>array(
-array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_1', 'value'=>'セミナー１', 'class'=>'uk-checkbox' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'セミナー２' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_2', 'value'=>'セミナー２', 'class'=>'uk-checkbox' ),
 array( 'input'=>' ' ),
-array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３' ),
+array( 'type'=>'checkbox', 'name'=>'q_order_3', 'value'=>'セミナー３', 'class'=>'uk-checkbox' ),
   ),
 ),
 // } 1行
 // 1行 {
 array('header'=>'お問い合わせ内容',
-  'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
+  'valid_require'=>$required_string, 'error_require'=>'お問い合わせ内容が入力されていません', 'valid_notkanahan'=>'q_other', 'error_notkanahan'=>'お問い合わせ内容に半角カタカナがあります。すべて全角で入力してください',
   'valid_maxlen'=>'q_other=500', 'error_maxlen'=>'お問い合わせ内容の文字数は500文字以内で入力してください',
   'help'=>'全角500文字以内でお問い合わせを入力してください。',
   'data'=>array(
-array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。' ),
+array( 'type'=>'textarea', 'name'=>'q_other', 'class'=>'uk-textarea ime_on', 'style'=>'width: 95%; height: 100px;', 'onKeyup'=>"var n=500-this.value.length;var s=document.getElementById('tasp1');s.innerHTML='('+n+')';", 'placeholder'=>'お問い合わせ内容を入力してください。', 'required'=>'' ),
 array( 'input'=>'<br'.XHTML.'>'."<strong><span id='tasp1'></span></strong>".'<br'.XHTML.'>' ),
   ),
 ),
@@ -324,12 +320,12 @@ function _fmGetAction ($err) {
 }
 
 function _fmMkSeni ($items, $action) {
-  $buf = '<div class="uk-child-width-1-3@m uk-text-center uk-button-group uk-margin">'.LB;
+  $buf = '<div class="uk-button-group uk-child-width-1-3@m uk-text-center uk-margin">'.LB;
   foreach ($items as $key => $value) {
     if ($action == $key) {
-      $buf .= '  <button class="uk-button uk-button-secondary uk-margin-small-bottom uk-text-nowrap" style="cursor: default">'.$value.'</button>'.LB;
+      $buf .= '  <button class="uk-button uk-button-secondary uk-text-nowrap" style="cursor: default">'.$value.'</button>'.LB;
     } else {
-      $buf .= '  <button class="uk-button uk-button-default uk-margin-small-bottom uk-text-nowrap" style="cursor: default">'.$value.'</button>'.LB;
+      $buf .= '  <button class="uk-button uk-button-default uk-text-nowrap" disabled>'.$value.'</button>'.LB;
     }
   }
   $buf .= '</div>'.LB;
@@ -343,18 +339,17 @@ function _fmPutiFilter($s) {
 }
 
 function _fmChkUseCAPTCHA_HTML () {
-  global $_CP_CONF, $_USER;
-  if ( ($_CP_CONF['anonymous_only'] && $_USER['uid'] < 2) || $_CP_CONF['anonymous_only'] == 0 || ($_CP_CONF['remoteusers'] == 1 && SEC_inGroup("Remote Users") ) ) {
+  global $_RECAPTCHA_CONF;
+  if ( RECAPTCHA_isEnabled() && RECAPTCHA_requireCaptcha('contact') ) {
     return true;
   }
   return false;
 }
 function _fmVldCAPTCHA ($type, $errmsg) {
   $msg = '';
-  if (!function_exists('CAPTCHA_sid')) { return $msg; }
+  if (!function_exists('plugin_itemPreSave_recaptcha')) { return $msg; }
   if ( _fmChkUseCAPTCHA_HTML() ) {
-    $str = COM_applyFilter($_POST['captcha']);
-    list( $rc, $msg )  = CAPTCHA_checkInput( $type, $str );
+    $msg = plugin_itemPreSave_recaptcha($type);
   }
   if ( !empty($msg) && !empty($errmsg) ) { $msg = $errmsg; }
   return $msg;
@@ -553,7 +548,7 @@ function _fmMkTitle ($title) {
   return <<<END
 
   <h3 class="uk-h3">$title</h3>
-  <dl class="uk-description-list-horizontal">
+
 END;
 }
 
@@ -683,26 +678,15 @@ function _fmMkTable_Data ($datas, $action, $addclass='') {
 }
 
 function _fmMkCAPTCHA_HTML($name, $msg_notcaptcha) {
-  global $_CP_CONF, $_USER, $_TABLES;
+  global $_RECAPTCHA_CONF;
   $captcha = '';
-  if (!function_exists('CAPTCHA_sid')) { return $msg_notcaptcha; }
+  if (!function_exists('plugin_itemPreSave_recaptcha')) { return $msg_notcaptcha; }
   if ( _fmChkUseCAPTCHA_HTML() ) {
-    $csid = 0;
-    // housekeeping, delete old captcha sessions
-    $oldSessions = time() - ($_CP_CONF['expire']+900);
-    DB_query("DELETE FROM {$_TABLES['cp_sessions']} WHERE cptime < " . $oldSessions,1);
-    // OK, we need to insert the CAPTCHA, so now we need to setup the session_id:
-    // check to see if a failed entry happened...
-    if ( isset($_POST['csid']) ) {
-      $csid = COM_applyFilter($_POST['csid']);
-    } else {
-      $csid = CAPTCHA_sid();
-    }
-    $time    = time();
-    $counter = 0;
-    $validation = '';  // this will be filled in by the CAPTCHA
-    DB_save($_TABLES['cp_sessions'],"session_id,cptime,validation,counter","'$csid','$time','','0'");
-    $captcha = CAPTCHA_getHTML($csid,$name);
+    $lang = RECAPTCHA_getLangCode();
+    $captcha = '<div class="g-recaptcha" data-sitekey="'
+      . RECAPTCHA_esc($_RECAPTCHA_CONF['public_key']) . '"></div>'
+      . '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl='
+      . RECAPTCHA_esc($lang) . '" async defer></script>';
   }
   return $captcha;
 }
@@ -712,19 +696,24 @@ function _fmMkTable ($tables, $action) {
   foreach ($tables as $lines) {
     $flg_valid_captcha=false;
     $errflg = '';
-    $textclass=''; $formclass='';
-    // エラーチェック
+    $textclass=''; $formclass=''; $formid=''; $labelfor='';
+    // 1行のエラーチェック
     if (!empty($_POST) && !empty($_POST['action'])) { $errflg = _fmValidateLines($lines); }
     if ($errflg) { $textclass=' uk-text-danger'; $formclass=' uk-form-danger'; }
+    for ($i=0; $i<count($lines['data']); $i++) {
+      if (isset($lines['data'][$i]['name']) && !isset($lines['data'][$i]['id'])) { $lines['data'][$i]['id'] = $lines['data'][$i]['name']; }
+      if (isset($lines['data'][$i]['id'])) { if(isset($lines['data'][$i]['type']) && !in_array($lines['data'][$i]['type'],array('radio','checkbox'))) { $formid=$lines['data'][$i]['id'];break; } }
+    }
+    if (!empty($formid)) { $labelfor=' for="'.$formid.'"'; }
     $buf .= LB;
-    $buf .= '    <div class="uk-margin" uk-grid><div class="uk-text-bold  uk-width-1-5@s '.$tdclass.'">';
+    $buf .= '  <div class="uk-margin">'.LB;
+    $buf .= '    <label class="uk-form-label'.$textclass.'"'.$labelfor.'>';
     if (isset($lines['header'])) { $buf .= $lines['header']; }
     if (isset($lines['header_captcha'])) { $buf .= $lines['header_captcha']; }
     if (isset($lines['valid_require'])) { $buf .= $lines['valid_require']; }
     if (isset($lines['valid_captcha'])) { $buf .= $lines['valid_captcha']; $flg_valid_captcha=true; }
-    if (isset($lines['help']) && $action == 'input') { $buf .= ' (<span data-uk-tooltip title="'.$lines['help'].'">?</span>)'; }
-    $buf .= '</div>'.LB;
-     $buf .= '    <div class="uk-width-4-5@s uk-margin-remove' . $textclass . '">';
+    $buf .= '</label>'.LB;
+    $buf .= '    <div class="uk-form-controls">'.LB;
     if (isset($lines['data'])) {
       if ($flg_valid_captcha) {
         $buf .= _fmMkCAPTCHA_HTML('contact',$lines['error_notcaptcha']);
@@ -732,7 +721,11 @@ function _fmMkTable ($tables, $action) {
         $buf .= _fmMkTable_Data($lines['data'], $action, $formclass);
       }
     }
-    $buf .= '</div></div>'.LB;
+
+    if (isset($lines['help']) && $action == 'input') { $buf .= ' <div class="uk-text-warning uk-text-small"> '.$lines['help'].'</div>'; }
+
+    $buf .= LB.'    </div>'.LB;
+    $buf .= '  </div>'.LB;
   }
   return $buf;
 }
@@ -751,10 +744,8 @@ function _fmMkForm ($items, $action) {
           case 'table': $buf .= _fmMkTable($value, $action); break;
         }
       }
-      $buf .= <<<END
+      $buf .= "".LB;
 
-    </dl>
-END;
     } elseif (!empty($item['table_captcha'])) {  //画像認証テーブル
       if ((!empty($action) && $action == 'input') && _fmChkUseCAPTCHA_HTML()) {
         foreach ($item as $key => $value) {
@@ -764,10 +755,7 @@ END;
             case 'table_captcha': $buf .= _fmMkTable($value, $action); break;
           }
         }
-        $buf .= <<<END
-
-    </dl>
-END;
+        $buf .= "".LB;
       }
     } elseif (!empty($item['action'])) {         //送信ボタン
       if ($item['action'] == $action) {
@@ -868,12 +856,10 @@ if ($action == 'input' || $action == 'confirm') {
 
   $retval = <<<END
 
-<div class="gl-form">
 $seni
-</div>
-<div class="uk-margin-left uk-margin-right">
+<div id="$page" class="uk-margin-left uk-margin-right">
 $valid
-<form name="subForm" method="post" action="{$pageurl}">
+<form name="subForm" class="uk-form-horizontal uk-margin-large" method="post" action="{$pageurl}">
 $form
 </form>
 </div>
@@ -896,10 +882,8 @@ END;
 
   $out_html = <<<END
 
-<div data-uk-button-checkbox>
 $seni
-</div>
-<div>
+<div id="$page" class="uk-margin-left uk-margin-right">
 <p><strong>お問い合わせを受け付けました。</strong></p>
 <p>※お問い合わせ確認のメールを自動送信しました。<br />
 メールが届かない場合は、ご登録のメールアドレスが間違っている可能性があります。<br />

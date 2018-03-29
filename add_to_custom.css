@@ -1,12 +1,6 @@
 /*--------------------------------------
  FORM Contents
 ---------------------------------------*/
-div.gl-form .uk-breadcrumb > li:nth-child(n+2):before {
-  content: ">>";
-  display: inline-block;
-  margin: 0 8px;
-}
-
 /* for Japanese */
 .ime_on { ime-mode: active; }
 .ime_off { ime-mode: inactive; }
